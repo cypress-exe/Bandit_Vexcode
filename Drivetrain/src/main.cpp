@@ -22,43 +22,66 @@
 
 using namespace vex;
 
+
+void updateDriveMotors(){
+  // Left Up and Down is ROBOT Forward and Back (3)
+  // Right Right and Left is ROBOT Turning (1)
+  // Left Right and Left is ROBOT Strafe (4)
+
+  // Get inputs
+  int driveAxisValue = Controller1.Axis3.position();
+  int turningAxisValue = Controller1.Axis1.position();
+  int strafeAxisValue = Controller1.Axis4.position();
+
+  // Create variables
+  int leftMotorVelocity = 0;
+  int rightMotorVelocity = 0;
+  int strafeMotorVelocity = 0;
+
+
+  // Set the speed of the motor only if the value is more than the deadband.
+
+  // Movement Logic
+  if (abs(driveAxisValue) > deadband) {
+    leftMotorVelocity += driveAxisValue;
+    rightMotorVelocity += driveAxisValue;
+  }
+
+  if (abs(turningAxisValue) > deadband) {
+    // Decide the direction in which we are turning.
+    // Turn right if the value is positive, left if the value is negative.
+    if (turningAxisValue > 0){
+      // Turn right
+      leftMotorVelocity += turningAxisValue;
+      rightMotorVelocity -= turningAxisValue;
+    } else {
+      // Turn left
+      leftMotorVelocity -= turningAxisValue;
+      rightMotorVelocity += turningAxisValue;
+    }
+  }
+
+  if (abs(strafeAxisValue) > deadband) {
+    strafeMotorVelocity += strafeAxisValue;
+  }
+
+  // Update the motors to be the computed velocity
+  LeftMotor.setVelocity(leftMotorVelocity, percent);
+  RightMotor.setVelocity(rightMotorVelocity, percent);
+  StrafeMotor.setVelocity(strafeMotorVelocity, percent);
+
+
+  // Spin both motors in the forward direction.
+  LeftMotor.spin(forward);
+  RightMotor.spin(forward);
+}
+
+
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  // Deadband stops the motors when Axis values are close to zero.
-  int deadband = 5;
-
-  while (true) {
-    // Get the velocity percentage of the left motor. (Axis3)
-    int leftMotorSpeed = Controller1.Axis3.position();
-    // Get the velocity percentage of the right motor. (Axis2)
-    int rightMotorSpeed = Controller1.Axis2.position();
-
-    // Set the speed of the left motor. If the value is less than the deadband,
-    // set it to zero.
-    if (abs(leftMotorSpeed) < deadband) {
-      // Set the speed to zero.
-      LeftMotor.setVelocity(0, percent);
-    } else {
-      // Set the speed to leftMotorSpeed
-      LeftMotor.setVelocity(leftMotorSpeed, percent);
-    }
-
-    // Set the speed of the right motor. If the value is less than the deadband,
-    // set it to zero.
-    if (abs(rightMotorSpeed) < deadband) {
-      // Set the speed to zero
-      RightMotor.setVelocity(0, percent);
-    } else {
-      // Set the speed to rightMotorSpeed
-      RightMotor.setVelocity(rightMotorSpeed, percent);
-    }
-
-    // Spin both motors in the forward direction.
-    LeftMotor.spin(forward);
-    RightMotor.spin(forward);
-
-    wait(25, msec);
+  while(true){
+    updateDriveMotors();    
   }
 }

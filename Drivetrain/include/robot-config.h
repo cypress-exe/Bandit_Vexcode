@@ -7,7 +7,7 @@ extern controller Controller1;
 extern motor LeftMotor;
 extern motor RightMotor;
 extern motor StrafeMotor;
-extern motor ClawMotor;
+extern motor PullerMotor;
 extern motor_group ArmMotors;
 
 /**

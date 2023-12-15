@@ -1,3 +1,5 @@
 extern int deadband;
-extern int armSpeed;
-extern int pullerSpeed;
+extern int movementSpeedMultiplier;
+extern int strafeSpeedMultiplier;
+extern int armSpeedMultiplier;
+extern int pullerSpeedMultiplier;

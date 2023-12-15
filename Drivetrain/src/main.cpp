@@ -45,6 +45,11 @@ void updateDriveMotors(){
     strafeMotorVelocity += strafeAxisValue;
   }
 
+  // Multiply the speed by the speed in settings
+  leftMotorVelocity *= movementSpeedMultiplier;
+  rightMotorVelocity *= movementSpeedMultiplier;
+  strafeMotorVelocity += strafeSpeedMultiplier;
+
   // Update the motors to be the computed velocity
   LeftMotor.setVelocity(leftMotorVelocity, percent);
   RightMotor.setVelocity(rightMotorVelocity, percent);
@@ -82,8 +87,8 @@ void updateGrabberMotors(){
   if (pullerOut) pullerVelocity += -1;
 
   // Multiply the speed by the speed in settings
-  armVelocity *= armSpeed;
-  pullerVelocity *= pullerSpeed;
+  armVelocity *= armSpeedMultiplier;
+  pullerVelocity *= pullerSpeedMultiplier;
 
   // Update the motors to be the computed velocity
   ArmMotors.setVelocity(armVelocity, percent);

@@ -48,7 +48,7 @@ void ControllerMovement::updateDriveMotors(){
   // Multiply the speed by the speed in settings
   left_motor_velocity *= movement_speed_multiplier;
   right_motor_velocity *= movement_speed_multiplier;
-  strafe_motor_velocity += strafe_speed_multiplier;
+  strafe_motor_velocity *= strafe_speed_multiplier;
 
   // Update the motors to be the computed velocity
   LeftMotor.setVelocity(left_motor_velocity, percent);

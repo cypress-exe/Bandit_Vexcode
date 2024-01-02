@@ -1,0 +1,8 @@
+Classes will use PascalCase
+    MyClass
+
+Functions will use CamelCase
+    myFunctionName
+
+Variables will use snake_case
+    my_variable_name

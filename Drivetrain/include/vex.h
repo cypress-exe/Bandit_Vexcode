@@ -1,3 +1,5 @@
+#pragma once
+
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       vex.h                                                     */
@@ -16,8 +18,8 @@
 #include "v5_vcs.h"
 
 #include "robot-config.h"
-#include "settings-config.h"
 
+// Custom Functions (Probably Will Be Compiled Out)
 #define waitUntil(condition)                                                   \
   do {                                                                         \
     wait(5, msec);                                                             \

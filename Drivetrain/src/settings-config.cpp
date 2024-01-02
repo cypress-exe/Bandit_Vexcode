@@ -1,14 +1,16 @@
+#include "settings-config.h"
+
 // Deadband stops the motors when Axis values are close to zero.
-int deadband = 5;
+const int deadband = 5;
 
 // Speed of the movement of the robot (not strafing)
-int movementSpeedMultiplier = 1;
+const int movement_speed_multiplier = 1;
 
 // Speed of the strafe movement of the robot
-int strafeSpeedMultiplier = 1;
+const int strafe_speed_multiplier = 1;
 
 // Speed of the arm going up and down.
-int armSpeedMultiplier = 1;
+const int arm_speed_multiplier = 1;
 
 // Speed of the puller mechanism
-int pullerSpeedMultiplier = 1;
+const int puller_speed_multiplier = 1;

@@ -12,14 +12,14 @@ brain Brain;
 // VEXcode device constructors
 
 // Local Motors
-motor ArmMotorLeft = motor(PORT6, ratio18_1, false);
-motor ArmMotorRight = motor(PORT5, ratio18_1, true);
+motor ArmMotorLeft = motor(PORT6, ratio18_1, true);
+motor ArmMotorRight = motor(PORT5, ratio18_1, false);
 
 // Global Motors
 controller Controller1 = controller(primary);
-motor LeftMotor = motor(PORT10, ratio18_1, true);
-motor RightMotor = motor(PORT1, ratio18_1, false);
-motor StrafeMotor = motor(PORT9, ratio18_1, false);
+motor LeftMotor = motor(PORT10, ratio18_1, false);
+motor RightMotor = motor(PORT1, ratio18_1, true);
+motor StrafeMotor = motor(PORT9, ratio18_1, true);
 motor PullerMotor = motor(PORT2, ratio18_1, false);
 motor_group ArmMotors = motor_group(ArmMotorLeft, ArmMotorRight);
 

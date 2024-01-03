@@ -4,13 +4,16 @@
 const int deadband = 5;
 
 // Speed of the movement of the robot (not strafing)
-const int movement_speed_multiplier = 1;
+const float movement_speed_multiplier = 1;
+
+// Speed of the turning of the robot
+const float turning_speed_multiplier = 0.5;
 
 // Speed of the strafe movement of the robot
-const int strafe_speed_multiplier = 1;
+const float strafe_speed_multiplier = 0.7;
 
 // Speed of the arm going up and down.
-const int arm_speed_multiplier = 1;
+const float arm_speed_multiplier = 25;
 
 // Speed of the puller mechanism
-const int puller_speed_multiplier = 1;
+const float puller_speed_multiplier = 50;

@@ -9,18 +9,19 @@ void ControllerMovement::updateDriveMotors(){
   // Left Right and Left is ROBOT Strafe (4)
 
   // Get inputs
-  int drive_axis_value = Controller1.Axis3.position();
-  int turning_axis_value = Controller1.Axis1.position();
-  int strafe_axis_value = Controller1.Axis4.position();
-
-  // Debug out to console
-  Controller1.Screen.print("Axis 3: " + (int)drive_axis_value);
-  Controller1.Screen.print("Axis 4: " + (int)strafe_axis_value);
+  float drive_axis_value = (float)Controller1.Axis3.position();
+  float turning_axis_value = (float)Controller1.Axis1.position();
+  float strafe_axis_value = (float)Controller1.Axis4.position();
 
   // Create variables
-  int left_motor_velocity = 0;
-  int right_motor_velocity = 0;
-  int strafe_motor_velocity = 0;
+  float left_motor_velocity = 0;
+  float right_motor_velocity = 0;
+  float strafe_motor_velocity = 0;
+
+  // Multiply the inputs by the speed in settings
+  drive_axis_value *= movement_speed_multiplier;
+  turning_axis_value *= turning_speed_multiplier;
+  strafe_axis_value *= strafe_speed_multiplier;
 
 
   // Set the speed of the motor only if the value is more than the deadband.
@@ -31,28 +32,16 @@ void ControllerMovement::updateDriveMotors(){
     right_motor_velocity += drive_axis_value;
   }
 
+
   if (abs(turning_axis_value) > deadband) {
-    // Decide the direction in which we are turning.
-    // Turn right if the value is positive, left if the value is negative.
-    if (turning_axis_value > 0){
-      // Turn right
-      left_motor_velocity += turning_axis_value;
-      right_motor_velocity -= turning_axis_value;
-    } else {
-      // Turn left
-      left_motor_velocity -= turning_axis_value;
-      right_motor_velocity += turning_axis_value;
-    }
+    left_motor_velocity += turning_axis_value;
+    right_motor_velocity -= turning_axis_value;
   }
 
   if (abs(strafe_axis_value) > deadband) {
     strafe_motor_velocity += strafe_axis_value;
   }
 
-  // Multiply the speed by the speed in settings
-  left_motor_velocity *= movement_speed_multiplier;
-  right_motor_velocity *= movement_speed_multiplier;
-  strafe_motor_velocity *= strafe_speed_multiplier;
 
   // Update the motors to be the computed velocity
   LeftMotor.setVelocity(left_motor_velocity, percent);
@@ -71,15 +60,15 @@ void ControllerMovement::updateArmMotors(){
   // Puller in / Puller out triball with the right buttons on the top of the controller (R1, R2)
 
   // Get inputs
-  bool raise_arm = Controller1.ButtonL1.PRESSED;
-  bool lower_arm = Controller1.ButtonL2.PRESSED;
+  bool raise_arm = Controller1.ButtonL1.pressing();
+  bool lower_arm = Controller1.ButtonL2.pressing();
 
-  bool puller_in = Controller1.ButtonR1.PRESSED;
-  bool puller_out = Controller1.ButtonR2.PRESSED;
+  bool puller_in = Controller1.ButtonR1.pressing();
+  bool puller_out = Controller1.ButtonR2.pressing();
 
   // Create Variables
-  int arm_velocity = 0;
-  int puller_velocity = 0;
+  float arm_velocity = 0;
+  float puller_velocity = 0;
 
   // Logic
   // Edit the variables to be 1, 0, or -1

@@ -11,7 +11,11 @@ void ControllerMovement::updateDriveMotors(){
   // Get inputs
   int drive_axis_value = Controller1.Axis3.position();
   int turning_axis_value = Controller1.Axis1.position();
-  int stafe_axis_value = Controller1.Axis4.position();
+  int strafe_axis_value = Controller1.Axis4.position();
+
+  // Debug out to console
+  Controller1.Screen.print("Axis 3: " + (int)drive_axis_value);
+  Controller1.Screen.print("Axis 4: " + (int)strafe_axis_value);
 
   // Create variables
   int left_motor_velocity = 0;
@@ -41,8 +45,8 @@ void ControllerMovement::updateDriveMotors(){
     }
   }
 
-  if (abs(stafe_axis_value) > deadband) {
-    strafe_motor_velocity += stafe_axis_value;
+  if (abs(strafe_axis_value) > deadband) {
+    strafe_motor_velocity += strafe_axis_value;
   }
 
   // Multiply the speed by the speed in settings

@@ -12,16 +12,18 @@ brain Brain;
 // VEXcode device constructors
 
 // Local Motors
-motor ArmMotorLeft = motor(PORT7, ratio18_1, false);
-motor ArmMotorRight = motor(PORT8, ratio18_1, true);
+motor ArmMotorLeft = motor(PORT6, ratio18_1, false);
+motor ArmMotorRight = motor(PORT5, ratio18_1, true);
 
 // Global Motors
 controller Controller1 = controller(primary);
-motor LeftMotor = motor(PORT1, ratio18_1, false);
-motor RightMotor = motor(PORT10, ratio18_1, true);
-motor StrafeMotor = motor(PORT3, ratio18_1, false);
-motor PullerMotor = motor(PORT3, ratio18_1, false);
+motor LeftMotor = motor(PORT10, ratio18_1, true);
+motor RightMotor = motor(PORT1, ratio18_1, false);
+motor StrafeMotor = motor(PORT9, ratio18_1, false);
+motor PullerMotor = motor(PORT2, ratio18_1, false);
 motor_group ArmMotors = motor_group(ArmMotorLeft, ArmMotorRight);
+
+// Port 7 is wifi thing
 
 // VEXcode generated functions
 

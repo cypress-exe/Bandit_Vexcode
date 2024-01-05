@@ -1,5 +1,8 @@
+#include <cmath>
+
 #include "vex.h"
 #include "settings-config.h"
+#include "overrides.h"
 
 #include "controller-movement.h"
 
@@ -27,18 +30,18 @@ void ControllerMovement::updateDriveMotors(){
   // Set the speed of the motor only if the value is more than the deadband.
 
   // Movement Logic
-  if (abs(drive_axis_value) > deadband) {
+  if (std::abs(drive_axis_value) > deadband) {
     left_motor_velocity += drive_axis_value;
     right_motor_velocity += drive_axis_value;
   }
 
 
-  if (abs(turning_axis_value) > deadband) {
+  if (std::abs(turning_axis_value) > deadband) {
     left_motor_velocity += turning_axis_value;
     right_motor_velocity -= turning_axis_value;
   }
 
-  if (abs(strafe_axis_value) > deadband) {
+  if (std::abs(strafe_axis_value) > deadband) {
     strafe_motor_velocity += strafe_axis_value;
   }
 
@@ -59,12 +62,14 @@ void ControllerMovement::updateArmMotors(){
   // Raise / Lower the arm with the left buttons on the top of the controller (L1, L2)
   // Puller in / Puller out triball with the right buttons on the top of the controller (R1, R2)
 
-  // Get inputs
-  bool raise_arm = Controller1.ButtonL1.pressing();
-  bool lower_arm = Controller1.ButtonL2.pressing();
+  if (arm_overrided) return;
 
-  bool puller_in = Controller1.ButtonR1.pressing();
-  bool puller_out = Controller1.ButtonR2.pressing();
+  // Get inputs
+  bool raise_arm = Controller1.ButtonR1.pressing();
+  bool lower_arm = Controller1.ButtonL1.pressing();
+
+  bool puller_in = Controller1.ButtonDown.pressing();
+  bool puller_out = Controller1.ButtonUp.pressing();
 
   // Create Variables
   float arm_velocity = 0;

@@ -1,6 +1,7 @@
 #include "vex.h"
 
 #include "controller-movement.h"
+#include "controller-functions.h"
 
 
 using namespace vex;
@@ -15,5 +16,8 @@ int main() {
     // Controller Movement
     ControllerMovement::updateDriveMotors();
     ControllerMovement::updateArmMotors();
+
+    // Controller Functions
+    ControllerFunctions::update();
   }
 }

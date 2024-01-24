@@ -59,9 +59,6 @@ void ControllerMovement::updateDriveMotors(){
 }
 
 void ControllerMovement::updateArmMotors(){
-  // Raise / Lower the arm with the left buttons on the top of the controller (L1, L2)
-  // Puller in / Puller out triball with the right buttons on the top of the controller (R1, R2)
-
   if (arm_overrided) return;
 
   // Get inputs
@@ -96,4 +93,28 @@ void ControllerMovement::updateArmMotors(){
   // Spin the motors in the forward direction.
   ArmMotors.spin(forward);
   PullerMotor.spin(forward);
+}
+
+void ControllerMovement::updateLaunchingMotors(){
+  // Get inputs
+  bool treads_in = Controller1.ButtonB.pressing();
+  bool treads_out = Controller1.ButtonX.pressing();
+
+  // Create Variables
+  float treads_velocity = 0;
+
+  // Logic
+  // Edit the variables to be 1, 0, or -1
+
+  if (treads_in) treads_velocity += 1;
+  if (treads_out) treads_velocity += -1;
+
+  // Multiply the speed by the speed in settings
+  treads_velocity *= treads_speed_multiplier;
+
+  // Update the motors to be the computed velocity
+  TreadsMotor.setVelocity(treads_velocity, percent);
+
+  // Spin the motors in the forward direction.
+  TreadsMotor.spin(forward);
 }

@@ -9,8 +9,9 @@ extern controller Controller1;
 extern motor LeftMotor;
 extern motor RightMotor;
 extern motor StrafeMotor;
-extern motor PullerMotor;
 extern motor_group ArmMotors;
+extern motor PullerMotor;
+extern motor TreadsMotor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

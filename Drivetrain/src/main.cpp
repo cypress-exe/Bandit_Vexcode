@@ -16,8 +16,9 @@ int main() {
     // Controller Movement
     ControllerMovement::updateDriveMotors();
     ControllerMovement::updateArmMotors();
+    ControllerMovement::updateLaunchingMotors();
 
     // Controller Functions
-    ControllerFunctions::update();
+    // ControllerFunctions::update();
   }
 }

@@ -21,10 +21,8 @@ motor LeftMotor = motor(PORT10, ratio18_1, false);
 motor RightMotor = motor(PORT1, ratio18_1, true);
 motor StrafeMotor = motor(PORT9, ratio18_1, true);
 motor_group ArmMotors = motor_group(ArmMotorLeft, ArmMotorRight);
-motor PullerMotor = motor(PORT2, ratio18_1, false);
+motor PullerMotor = motor(PORT7, ratio18_1, false);
 motor TreadsMotor = motor(PORT8, ratio18_1, false);
-
-// Port 7 is wifi thing
 
 // VEXcode generated functions
 

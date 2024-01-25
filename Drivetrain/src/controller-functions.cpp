@@ -26,4 +26,5 @@ void ControllerFunctions::triballIntake()
     // Pull the puller in
     // Move the arm down a little
     // Stop the puller
+
 }

@@ -19,4 +19,4 @@ const float arm_speed_multiplier = 25;
 const float puller_speed_multiplier = 50;
 
 // Speed of the treads
-const float treads_speed_multiplier = 25;
+const float treads_speed_multiplier = 50;

@@ -30,18 +30,18 @@ void ControllerMovement::updateDriveMotors(){
   // Set the speed of the motor only if the value is more than the deadband.
 
   // Movement Logic
-  if (std::abs(drive_axis_value) > deadband) {
+  if (std::abs(drive_axis_value) > drive_deadband) {
     left_motor_velocity += drive_axis_value;
     right_motor_velocity += drive_axis_value;
   }
 
 
-  if (std::abs(turning_axis_value) > deadband) {
+  if (std::abs(turning_axis_value) > turning_deadband) {
     left_motor_velocity += turning_axis_value;
     right_motor_velocity -= turning_axis_value;
   }
 
-  if (std::abs(strafe_axis_value) > deadband) {
+  if (std::abs(strafe_axis_value) > strafe_deadband) {
     strafe_motor_velocity += strafe_axis_value;
   }
 

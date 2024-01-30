@@ -47,14 +47,14 @@ void ControllerMovement::updateDriveMotors(){
 
 
   // Update the motors to be the computed velocity
-  LeftMotor.setVelocity(left_motor_velocity, percent);
-  RightMotor.setVelocity(right_motor_velocity, percent);
+  LeftDriveMotor.setVelocity(left_motor_velocity, percent);
+  RightDriveMotor.setVelocity(right_motor_velocity, percent);
   StrafeMotor.setVelocity(strafe_motor_velocity, percent);
 
 
   // Spin the motors in the forward direction.
-  LeftMotor.spin(forward);
-  RightMotor.spin(forward);
+  LeftDriveMotor.spin(forward);
+  RightDriveMotor.spin(forward);
   StrafeMotor.spin(forward);
 }
 

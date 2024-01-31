@@ -30,6 +30,8 @@ void ControllerFunctions::triballIntake()
     // Move the arm down a little
     // Stop the puller
 
+    // alignRobotToTriball();
+
 }
 
 void ControllerFunctions::alignRobotToTriball(){
@@ -47,5 +49,6 @@ void ControllerFunctions::alignRobotToTriball(){
     correction *= triball_alignment_speed_multiplier;
 
     // Move the strafe motor by the correction amount
-     
+    Brain.Screen.print(correction);
+    Brain.Screen.newLine();
 }

@@ -20,5 +20,6 @@ int main() {
 
     // Controller Functions
     // ControllerFunctions::update();
+    ControllerFunctions::alignRobotToTriball();
   }
 }

@@ -8,13 +8,13 @@ extern brain Brain;
 extern controller Controller1;
 extern motor LeftDriveMotor;
 extern motor RightDriveMotor;
-extern smartdrive Drivetrain;
+// extern smartdrive Drivetrain;
 extern motor StrafeMotor;
 extern motor_group ArmMotors;
 extern motor PullerMotor;
 extern motor TreadsMotor;
 
-extern inertial InertialSensor;
+// extern inertial InertialSensor;
 extern distance LeftDistanceSensor;
 extern distance RightDistanceSensor;
 

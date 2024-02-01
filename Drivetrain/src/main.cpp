@@ -19,7 +19,7 @@ int main() {
     ControllerMovement::updateLaunchingMotors();
 
     // Controller Functions
-    // ControllerFunctions::update();
-    ControllerFunctions::alignRobotToTriball();
+    ControllerFunctions::update();
+    // ControllerFunctions::alignRobotToTriball();
   }
 }

@@ -4,7 +4,7 @@ class ControllerFunctions
 {
     public:
         static void update();
-        static void alignRobotToTriball();
+        static float triangulateTriball();
     private:
         static void triballIntake();
 

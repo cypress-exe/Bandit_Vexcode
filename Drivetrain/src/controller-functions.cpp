@@ -18,6 +18,8 @@ void ControllerFunctions::update()
             triballIntake();
         }
     }
+
+    strafe_motor_override = 0;
 }
 
 void ControllerFunctions::triballIntake()
@@ -38,20 +40,19 @@ void ControllerFunctions::triangulateTriball(){
     float left_distance = LeftDistanceSensor.objectDistance(inches);
     float right_distance = RightDistanceSensor.objectDistance(inches);
 
-    StrafeMotor.setVelocity(0, percent);
+    strafe_motor_override = 0;
 
     // Check to see if we should correct
     if (left_distance < triball_adjustment_distance)
     {
         // Move left
-        StrafeMotor.setVelocity(triball_adjustment_distance, percent);
+        strafe_motor_override += triball_adjustment_distance;
         Brain.Screen.print("Left");
     }
     if (right_distance < triball_adjustment_distance)
     {
         // Move right
-        StrafeMotor.setVelocity(-triball_adjustment_distance, percent);
+        strafe_motor_override -= triball_alignment_distance;
         Brain.Screen.print("Right");
     }
-    StrafeMotor.spin(forward);
 }

@@ -45,6 +45,8 @@ void ControllerMovement::updateDriveMotors(){
     strafe_motor_velocity += strafe_axis_value;
   }
 
+  // Overrides
+  strafe_motor_velocity += strafe_motor_override;
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);

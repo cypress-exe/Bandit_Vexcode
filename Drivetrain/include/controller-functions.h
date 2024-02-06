@@ -4,7 +4,7 @@ class ControllerFunctions
 {
     public:
         static void update();
-        static float triangulateTriball();
+        static void triangulateTriball();
     private:
         static void triballIntake();
 

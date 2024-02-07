@@ -6,8 +6,9 @@ const int turning_deadband = 5;
 const int strafe_deadband = 10;
 
 // Robot Alignment To Triball
-const float triball_adjustment_distance = 5; // inches
-const float triball_alignment_distance = 100; // inches
+const float triball_adjustment_speed = 30;
+const float triball_alignment_minimum_distance = 1;
+const float triball_alignment_maximum_distance = 2;
 
 // Speed of the movement of the robot (not strafing)
 const float movement_speed_multiplier = 1;

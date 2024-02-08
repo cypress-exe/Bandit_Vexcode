@@ -18,6 +18,9 @@ int main() {
     ControllerMovement::updateArmMotors();
     ControllerMovement::updateLaunchingMotors();
 
+    // Brain.Screen.print(LeftDistanceSensor.objectDistance(inches));
+    // Brain.Screen.newLine();
+
     // Controller Functions
     ControllerFunctions::update();
     // ControllerFunctions::alignRobotToTriball();

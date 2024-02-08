@@ -51,24 +51,28 @@ void stopStrafingMotor()
     // Stop once the triball is the correct distance away from the sensor.
     int msecs_waiting = 0;
     float triball_distance = 0;
-    while(triball_distance < triball_alignment_maximum_distance && msecs_waiting < 1000) { // 1 second timeout
+    while(triball_distance < triball_alignment_maximum_distance && msecs_waiting < 500) { // 1/2 second timeout
         // Update Triball Distance
         triball_distance = sensor.objectDistance(inches);
-        wait(5, msec);
-        msecs_waiting += 5;
+        wait(1, msec);
+        msecs_waiting += 1;
     }
 
     // Stop
     strafe_motor_override = 0;
     // Diagnostic Data
-    if (msecs_waiting >= 1000)
+    if (msecs_waiting >= 500)
     {
         Brain.Screen.print("Triball Triangulation Failed... Canceled.");
         Brain.Screen.newLine();
     }
 
-    // Reset braking after 1 second
+    // Reset braking after 1/2 second
+    wait(500, msec);
     StrafeMotor.stop(coast);
+
+    Brain.Screen.clearScreen();
+    Brain.Screen.clearLine();
 }
 
 void ControllerFunctions::triangulateTriball(){
@@ -84,15 +88,15 @@ void ControllerFunctions::triangulateTriball(){
         // Move left
         strafe_motor_override = 1 - triball_adjustment_speed;
         Brain.Screen.print("Triball Alignment: Left");
-        // task t1(int(*stopStrafingMotor)());
-        task(stopStrafingMotor);
+        Brain.Screen.newLine();
+        thread t1(stopStrafingMotor);
 
     } else if (right_distance < triball_alignment_minimum_distance)
     {
         // Move right
         strafe_motor_override = triball_adjustment_speed;
         Brain.Screen.print("Triball Alignment: Right");
-        // task t1(int(*stopStrafingMotor)());
-        task(stopStrafingMotor);
+        Brain.Screen.newLine();
+        thread t1(stopStrafingMotor);
     }
 }

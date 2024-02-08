@@ -16,6 +16,17 @@
 		"ratio": "cpp",
 		"*.tcc": "cpp",
 		"typeinfo": "cpp",
-		"thread": "cpp"
+		"thread": "cpp",
+		"array": "cpp",
+		"cctype": "cpp",
+		"clocale": "cpp",
+		"cwchar": "cpp",
+		"functional": "cpp",
+		"initializer_list": "cpp",
+		"iosfwd": "cpp",
+		"new": "cpp",
+		"stdexcept": "cpp",
+		"tuple": "cpp",
+		"utility": "cpp"
 	}
 }

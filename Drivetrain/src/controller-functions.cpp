@@ -2,10 +2,12 @@
 #include <thread>
 
 #include "vex.h"
-#include "overrides.h"
 
+#include "overrides.h"
 #include "controller-functions.h"
 #include "settings-config.h"
+
+using namespace vex;
 
 // Called every update frame
 void ControllerFunctions::update()
@@ -36,28 +38,37 @@ void ControllerFunctions::triballIntake()
 
 void stopStrafingMotor()
 {
-    distance sensor = RightDistanceSensor;
+    StrafeMotor.stop(brake);
+
+    // We have to find the sensor to use. It's janky, but we'll use the strafe_motor_override and whether it's positive or negative
+    distance sensor = NULL;
+    if (strafe_motor_override > 0){
+        sensor = RightDistanceSensor;
+    } else {
+        sensor = LeftDistanceSensor;
+    }
 
     // Stop once the triball is the correct distance away from the sensor.
     int msecs_waiting = 0;
-    
-    while(sensor.objectDistance(inches) < triball_alignment_maximum_distance && msecs_waiting < 1000) { // 1 second timeout
+    float triball_distance = 0;
+    while(triball_distance < triball_alignment_maximum_distance && msecs_waiting < 1000) { // 1 second timeout
+        // Update Triball Distance
+        triball_distance = sensor.objectDistance(inches);
         wait(5, msec);
         msecs_waiting += 5;
-
-        Brain.Screen.print(sensor.objectDistance(inches));
-        Brain.Screen.newLine();
     }
+
+    // Stop
     strafe_motor_override = 0;
-
-    // Brake immediately
-    StrafeMotor.stop(brake);
-
+    // Diagnostic Data
     if (msecs_waiting >= 1000)
     {
         Brain.Screen.print("Triball Triangulation Failed... Canceled.");
         Brain.Screen.newLine();
     }
+
+    // Reset braking after 1 second
+    StrafeMotor.stop(coast);
 }
 
 void ControllerFunctions::triangulateTriball(){
@@ -71,15 +82,17 @@ void ControllerFunctions::triangulateTriball(){
     if (left_distance < triball_alignment_minimum_distance)
     {
         // Move left
-        strafe_motor_override = 1-triball_adjustment_speed;
-        Brain.Screen.print("Left");
-        thread tl(stopStrafingMotor);
-    }
-    if (right_distance < triball_alignment_minimum_distance)
+        strafe_motor_override = 1 - triball_adjustment_speed;
+        Brain.Screen.print("Triball Alignment: Left");
+        // task t1(int(*stopStrafingMotor)());
+        task(stopStrafingMotor);
+
+    } else if (right_distance < triball_alignment_minimum_distance)
     {
         // Move right
         strafe_motor_override = triball_adjustment_speed;
-        Brain.Screen.print("Right");
-        thread tl(stopStrafingMotor);
+        Brain.Screen.print("Triball Alignment: Right");
+        // task t1(int(*stopStrafingMotor)());
+        task(stopStrafingMotor);
     }
 }

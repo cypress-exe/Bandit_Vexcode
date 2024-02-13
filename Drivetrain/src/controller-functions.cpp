@@ -33,7 +33,9 @@ void ControllerFunctions::triballIntake()
     // Move the arm down a little
     // Stop the puller
 
-    triangulateTriball();
+    //triangulateTriball();
+
+    ArmMotors.spinTo(360, degrees, false);
 }
 
 void stopStrafingMotor()

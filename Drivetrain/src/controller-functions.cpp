@@ -26,7 +26,7 @@ void ControllerFunctions::update()
 void ControllerFunctions::triballIntake()
 {
     // Stop all other processes from messing with the arm
-    // arm_overrided = true;
+    arm_overrided = true;
 
     // Move the arm up
     // Pull the puller in
@@ -34,8 +34,13 @@ void ControllerFunctions::triballIntake()
     // Stop the puller
 
     //triangulateTriball();
+    //ArmMotors.spinFor(forward, 10, rev, true);
+    ArmMotors.setVelocity(30, percent);
+    wait(500, msec);
+    ArmMotors.setVelocity(0, percent);
+    //ArmMotors.spinToPosition(500, degrees, true);
 
-    ArmMotors.spinTo(360, degrees, false);
+    arm_overrided = false;
 }
 
 void stopStrafingMotor()

@@ -1,4 +1,4 @@
 #include "overrides.h"
 
-bool arm_overrided = false;
+bool tribal_manipulating = false;
 float strafe_motor_override = 0;

@@ -13,23 +13,29 @@ using namespace vex;
 void ControllerFunctions::update()
 {
     // No triball operations if the arm is in use
-    if (!arm_overrided)
+    if (!tribal_manipulating)
     {
         // Triball Intake
         if(Controller1.ButtonR2.PRESSED)
         {
-            triballIntake();
+            intakeTriball();
+        }
+        // Triball Release
+        if(Controller1.ButtonL2.PRESSED)
+        {
+            releaseTriball();
         }
     }
 }
 
-void ControllerFunctions::grabTriball()
+void ControllerFunctions::intakeTriball_thread()
 {
     // Stop all other processes from messing with the arm
-    arm_overrided = true;
+    tribal_manipulating = true;
 
     // Raise the arm
     ArmMotors.setVelocity(25, percent);
+    BeltMotor.setVelocity(100, percent);
     wait(250, msec);
     ArmMotors.setVelocity(0, percent);
 
@@ -37,8 +43,8 @@ void ControllerFunctions::grabTriball()
     triangulateTriball();
 
     // Use the flipper to try to grab it
-    FlipperMotor.setVelocity(-50, percent);
-    wait(2000, msec);
+    FlipperMotor.setVelocity(60, percent);
+    wait(1000, msec);
 
     // Bring the arm down a bit
     ArmMotors.setVelocity(-10, percent);
@@ -46,18 +52,50 @@ void ControllerFunctions::grabTriball()
     wait(500, msec);
     ArmMotors.setVelocity(0, percent);
     FlipperMotor.setVelocity(0, percent);
+    BeltMotor.setVelocity(0, percent);
 
     // Resume other processes
-    arm_overrided = false;
-
+    tribal_manipulating = false;
 }
 
-void ControllerFunctions::triballIntake()
+void ControllerFunctions::releaseTriball_thread()
 {
-    thread t2(grabTriball);
+    // Stop all other processes from messing with the arm
+    tribal_manipulating = true;
+
+    // Raise the arm
+    ArmMotors.setVelocity(25, percent);
+    BeltMotor.setVelocity(-100, percent);
+    wait(250, msec);
+    ArmMotors.setVelocity(0, percent);
+
+    // Use the flipper to try to grab it
+    FlipperMotor.setVelocity(-50, percent);
+    wait(500, msec);
+
+    // Bring the arm down a bit
+    ArmMotors.setVelocity(-10, percent);
+    
+    wait(500, msec);
+    ArmMotors.setVelocity(0, percent);
+    FlipperMotor.setVelocity(0, percent);
+    BeltMotor.setVelocity(0, percent);
+
+    // Resume other processes
+    tribal_manipulating = false;
 }
 
-void stopStrafingMotor()
+void ControllerFunctions::intakeTriball()
+{
+    thread t2(intakeTriball_thread);
+}
+
+void ControllerFunctions::releaseTriball()
+{
+    thread t2(releaseTriball_thread);
+}
+
+void stopStrafingMotor_thread()
 {
     StrafeMotor.stop(brake);
 
@@ -98,6 +136,12 @@ void stopStrafingMotor()
 
 void ControllerFunctions::triangulateTriball(){
     // Get the info from the distance sensors
+
+    Brain.Screen.clearScreen();
+    Brain.Screen.clearLine();
+
+    Brain.Screen.print("Triangulating triball...");
+
     float left_distance = LeftDistanceSensor.objectDistance(inches);
     float right_distance = RightDistanceSensor.objectDistance(inches);
 
@@ -110,7 +154,7 @@ void ControllerFunctions::triangulateTriball(){
         strafe_motor_override = 1 - triball_adjustment_speed;
         Brain.Screen.print("Triball Alignment: Left");
         Brain.Screen.newLine();
-        thread t1(stopStrafingMotor);
+        thread t1(stopStrafingMotor_thread);
 
     } else if (right_distance < triball_alignment_minimum_distance)
     {
@@ -118,6 +162,9 @@ void ControllerFunctions::triangulateTriball(){
         strafe_motor_override = triball_adjustment_speed;
         Brain.Screen.print("Triball Alignment: Right");
         Brain.Screen.newLine();
-        thread t1(stopStrafingMotor);
+        thread t1(stopStrafingMotor_thread);
+    } else 
+    {
+        Brain.Screen.print("Unable to Locate Triball...");
     }
 }

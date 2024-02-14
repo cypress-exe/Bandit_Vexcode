@@ -61,7 +61,7 @@ void ControllerMovement::updateDriveMotors(){
 }
 
 void ControllerMovement::updateArmMotors(){
-  if (arm_overrided) return;
+  if (tribal_manipulating) return;
 
   // Get inputs
   bool raise_arm = Controller1.ButtonR1.pressing();
@@ -98,6 +98,8 @@ void ControllerMovement::updateArmMotors(){
 }
 
 void ControllerMovement::updateBeltMotor(){
+  if (tribal_manipulating) return;
+  
   // Get inputs
   bool belt_in = Controller1.ButtonB.pressing();
   bool belt_out = Controller1.ButtonX.pressing();

@@ -24,8 +24,8 @@ motor RightDriveMotor = motor(PORT1, ratio18_1, true);
 // smartdrive Drivetrain = smartdrive(LeftDriveMotor, RightDriveMotor, InertialSensor, 319.19, 320, 40, mm, 1); // magic numbers :)
 motor StrafeMotor = motor(PORT9, ratio18_1, true);
 motor_group ArmMotors = motor_group(ArmMotorLeft, ArmMotorRight);
-motor PullerMotor = motor(PORT7, ratio18_1, false);
-motor TreadsMotor = motor(PORT8, ratio18_1, false);
+motor FlipperMotor = motor(PORT7, ratio18_1, false);
+motor BeltMotor = motor(PORT8, ratio18_1, false);
 
 // Sensors
 // inertial InertialSensor = inertial(PORT19);
@@ -55,6 +55,6 @@ distance RightDistanceSensor = distance(PORT11);
 //   Brain.Screen.setCursor(1, 1);
 // }
 
-void vexcodeInit(void) {
+void pre_auton(void) {
   // calibrateDrivetrain();
 }

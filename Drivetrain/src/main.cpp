@@ -6,23 +6,35 @@
 
 using namespace vex;
 
-int main() {
-  // Initializing Robot Configuration. DO NOT REMOVE!
-  vexcodeInit();
+competition Competition;
 
-  // Main Loop
-  // Nothing happens without it being called directly or indirectly through this loop
+void autonomous(void){
+
+}
+
+void drivercontrol(void){
   while(true){
     // Controller Movement
     ControllerMovement::updateDriveMotors();
     ControllerMovement::updateArmMotors();
-    ControllerMovement::updateLaunchingMotors();
-
-    // Brain.Screen.print(LeftDistanceSensor.objectDistance(inches));
-    // Brain.Screen.newLine();
-
+    ControllerMovement::updateBeltMotor();
+    
     // Controller Functions
     ControllerFunctions::update();
     // ControllerFunctions::alignRobotToTriball();
   }
+}
+
+int main() {
+  // Set up callbacks for autonomous and driver control periods
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
+
+  // Run the pre-autonomous function.
+  pre_auton();
+
+  drivercontrol();
+
+  // Main Loop
+  // Nothing happens without it being called directly or indirectly through this loop
 }

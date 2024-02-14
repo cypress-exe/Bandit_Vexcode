@@ -89,34 +89,34 @@ void ControllerMovement::updateArmMotors(){
 
   // Update the motors to be the computed velocity
   ArmMotors.setVelocity(arm_velocity, percent);
-  PullerMotor.setVelocity(puller_velocity, percent);
+  FlipperMotor.setVelocity(puller_velocity, percent);
 
 
   // Spin the motors in the forward direction.
   ArmMotors.spin(forward);
-  PullerMotor.spin(forward);
+  FlipperMotor.spin(forward);
 }
 
-void ControllerMovement::updateLaunchingMotors(){
+void ControllerMovement::updateBeltMotor(){
   // Get inputs
-  bool treads_in = Controller1.ButtonB.pressing();
-  bool treads_out = Controller1.ButtonX.pressing();
+  bool belt_in = Controller1.ButtonB.pressing();
+  bool belt_out = Controller1.ButtonX.pressing();
 
   // Create Variables
-  float treads_velocity = 0;
+  float belt_velocity = 0;
 
   // Logic
   // Edit the variables to be 1, 0, or -1
 
-  if (treads_in) treads_velocity += 1;
-  if (treads_out) treads_velocity += -1;
+  if (belt_in) belt_velocity += 1;
+  if (belt_out) belt_velocity += -1;
 
   // Multiply the speed by the speed in settings
-  treads_velocity *= treads_speed_multiplier;
+  belt_velocity *= belt_speed_multiplier;
 
   // Update the motors to be the computed velocity
-  TreadsMotor.setVelocity(treads_velocity, percent);
+  BeltMotor.setVelocity(belt_velocity, percent);
 
   // Spin the motors in the forward direction.
-  TreadsMotor.spin(forward);
+  BeltMotor.spin(forward);
 }

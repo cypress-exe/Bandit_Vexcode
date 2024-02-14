@@ -23,24 +23,38 @@ void ControllerFunctions::update()
     }
 }
 
-void ControllerFunctions::triballIntake()
+void ControllerFunctions::grabTriball()
 {
     // Stop all other processes from messing with the arm
     arm_overrided = true;
 
-    // Move the arm up
-    // Pull the puller in
-    // Move the arm down a little
-    // Stop the puller
+    // Raise the arm
+    ArmMotors.setVelocity(25, percent);
+    wait(250, msec);
+    ArmMotors.setVelocity(0, percent);
 
-    //triangulateTriball();
-    //ArmMotors.spinFor(forward, 10, rev, true);
-    ArmMotors.setVelocity(30, percent);
+    // Move to triball
+    triangulateTriball();
+
+    // Use the flipper to try to grab it
+    FlipperMotor.setVelocity(-50, percent);
+    wait(2000, msec);
+
+    // Bring the arm down a bit
+    ArmMotors.setVelocity(-10, percent);
+    
     wait(500, msec);
     ArmMotors.setVelocity(0, percent);
-    //ArmMotors.spinToPosition(500, degrees, true);
+    FlipperMotor.setVelocity(0, percent);
 
+    // Resume other processes
     arm_overrided = false;
+
+}
+
+void ControllerFunctions::triballIntake()
+{
+    thread t2(grabTriball);
 }
 
 void stopStrafingMotor()

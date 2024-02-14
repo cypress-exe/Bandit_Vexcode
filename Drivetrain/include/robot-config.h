@@ -11,8 +11,8 @@ extern motor RightDriveMotor;
 // extern smartdrive Drivetrain;
 extern motor StrafeMotor;
 extern motor_group ArmMotors;
-extern motor PullerMotor;
-extern motor TreadsMotor;
+extern motor FlipperMotor;
+extern motor BeltMotor;
 
 // extern inertial InertialSensor;
 extern distance LeftDistanceSensor;
@@ -23,4 +23,4 @@ extern distance RightDistanceSensor;
  *
  * This should be called at the start of your int main function.
  */
-void vexcodeInit(void);
+void pre_auton(void);

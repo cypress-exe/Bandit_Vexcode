@@ -25,5 +25,5 @@ const float arm_speed_multiplier = 25;
 // Speed of the puller mechanism
 const float puller_speed_multiplier = 50;
 
-// Speed of the treads
-const float treads_speed_multiplier = 50;
+// Speed of the belt
+const float belt_speed_multiplier = 50;

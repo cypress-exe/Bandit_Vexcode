@@ -67,12 +67,12 @@ void ControllerMovement::updateArmMotors(){
   bool raise_arm = Controller1.ButtonR1.pressing();
   bool lower_arm = Controller1.ButtonL1.pressing();
 
-  bool puller_in = Controller1.ButtonDown.pressing();
-  bool puller_out = Controller1.ButtonUp.pressing();
+  bool net_down = Controller1.ButtonDown.pressing();
+  bool net_up = Controller1.ButtonUp.pressing();
 
   // Create Variables
   float arm_velocity = 0;
-  float puller_velocity = 0;
+  float net_velocity = 0;
 
   // Logic
   // Edit the variables to be 1, 0, or -1
@@ -80,21 +80,25 @@ void ControllerMovement::updateArmMotors(){
   if (raise_arm) arm_velocity += 1;
   if (lower_arm) arm_velocity += -1;
 
-  if (puller_in) puller_velocity += 1;
-  if (puller_out) puller_velocity += -1;
+  if (net_down) net_velocity += 1;
+  if (net_up) net_velocity += -1;
+
+  // Overrides
+  // The net cannot go "down" if the net bumper is active
+  if (NetBumper.PRESSED && net_velocity < 0) net_velocity = 0;
 
   // Multiply the speed by the speed in settings
   arm_velocity *= arm_speed_multiplier;
-  puller_velocity *= puller_speed_multiplier;
+  net_velocity *= net_speed_multiplier;
 
   // Update the motors to be the computed velocity
   ArmMotors.setVelocity(arm_velocity, percent);
-  FlipperMotor.setVelocity(puller_velocity, percent);
+  NetMotor.setVelocity(net_velocity, percent);
 
 
   // Spin the motors in the forward direction.
   ArmMotors.spin(forward);
-  FlipperMotor.spin(forward);
+  NetMotor.spin(forward);
 }
 
 void ControllerMovement::updateBeltMotor(){

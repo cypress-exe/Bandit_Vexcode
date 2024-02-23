@@ -43,7 +43,7 @@ void ControllerFunctions::intakeTriball_thread()
     triangulateTriball();
 
     // Use the flipper to try to grab it
-    FlipperMotor.setVelocity(60, percent);
+    NetMotor.setVelocity(60, percent);
     wait(1000, msec);
 
     // Bring the arm down a bit
@@ -51,7 +51,7 @@ void ControllerFunctions::intakeTriball_thread()
     
     wait(500, msec);
     ArmMotors.setVelocity(0, percent);
-    FlipperMotor.setVelocity(0, percent);
+    NetMotor.setVelocity(0, percent);
     BeltMotor.setVelocity(0, percent);
 
     // Resume other processes
@@ -70,7 +70,7 @@ void ControllerFunctions::releaseTriball_thread()
     ArmMotors.setVelocity(0, percent);
 
     // Use the flipper to try to grab it
-    FlipperMotor.setVelocity(-50, percent);
+    NetMotor.setVelocity(-50, percent);
     wait(500, msec);
 
     // Bring the arm down a bit
@@ -78,7 +78,7 @@ void ControllerFunctions::releaseTriball_thread()
     
     wait(500, msec);
     ArmMotors.setVelocity(0, percent);
-    FlipperMotor.setVelocity(0, percent);
+    NetMotor.setVelocity(0, percent);
     BeltMotor.setVelocity(0, percent);
 
     // Resume other processes

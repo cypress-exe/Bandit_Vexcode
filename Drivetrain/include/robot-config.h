@@ -8,6 +8,7 @@ extern brain Brain;
 extern inertial InertialSensor;
 extern distance LeftDistanceSensor;
 extern distance RightDistanceSensor;
+extern bumper NetBumper;
 
 extern controller Controller1;
 extern motor LeftDriveMotor;
@@ -15,7 +16,7 @@ extern motor RightDriveMotor;
 extern smartdrive Drivetrain;
 extern motor StrafeMotor;
 extern motor_group ArmMotors;
-extern motor FlipperMotor;
+extern motor NetMotor;
 extern motor BeltMotor;
 
 

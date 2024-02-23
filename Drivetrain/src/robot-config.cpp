@@ -18,6 +18,7 @@ controller Controller1 = controller(primary);
 inertial InertialSensor = inertial(PORT19);
 distance LeftDistanceSensor = distance(PORT20);
 distance RightDistanceSensor = distance(PORT11);
+bumper NetBumper = bumper(Brain.ThreeWirePort.H);
 
 // Drivetrain calibration
 void calibrateDrivetrain() {
@@ -45,7 +46,7 @@ motor RightDriveMotor = motor(PORT1, ratio18_1, true);
 smartdrive Drivetrain = smartdrive(LeftDriveMotor, RightDriveMotor, InertialSensor, 319.19, 320, 40, mm, 1); // magic numbers :)
 motor StrafeMotor = motor(PORT9, ratio18_1, true);
 motor_group ArmMotors = motor_group(ArmMotorLeft, ArmMotorRight);
-motor FlipperMotor = motor(PORT7, ratio18_1, true);
+motor NetMotor = motor(PORT7, ratio18_1, true);
 motor BeltMotor = motor(PORT8, ratio18_1, false);
 
 // VEXcode generated functions
@@ -58,7 +59,7 @@ motor BeltMotor = motor(PORT8, ratio18_1, false);
 
 void pre_auton(void) {
   // set motors to unique braking setting if applicable
-  FlipperMotor.stop(hold);
+  NetMotor.stop(hold);
 
   calibrateDrivetrain();
 }

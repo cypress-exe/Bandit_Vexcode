@@ -10,5 +10,5 @@ extern const float movement_speed_multiplier;
 extern const float turning_speed_multiplier;
 extern const float strafe_speed_multiplier;
 extern const float arm_speed_multiplier;
-extern const float puller_speed_multiplier;
+extern const float net_speed_multiplier;
 extern const float belt_speed_multiplier;

@@ -33,24 +33,22 @@ void ControllerFunctions::intakeTriball_thread()
     // Stop all other processes from messing with the arm
     tribal_manipulating = true;
 
-    // Raise the arm
-    ArmMotors.setVelocity(25, percent);
+    // Start the Belt
     BeltMotor.setVelocity(100, percent);
-    wait(250, msec);
-    ArmMotors.setVelocity(0, percent);
 
-    // Move to triball
-    triangulateTriball();
+    // Start the net
+    NetMotor.setVelocity(20, percent);
+    wait(500, msec);
 
-    // Use the flipper to try to grab it
-    NetMotor.setVelocity(60, percent);
+    // Start moving the arm up
+    ArmMotors.setVelocity(7, percent);
     wait(1000, msec);
 
-    // Bring the arm down a bit
-    ArmMotors.setVelocity(-10, percent);
-    
-    wait(500, msec);
+    // Stop the arm
     ArmMotors.setVelocity(0, percent);
+    wait(500, msec);
+
+    // Stop Everything
     NetMotor.setVelocity(0, percent);
     BeltMotor.setVelocity(0, percent);
 
@@ -63,20 +61,22 @@ void ControllerFunctions::releaseTriball_thread()
     // Stop all other processes from messing with the arm
     tribal_manipulating = true;
 
-    // Raise the arm
-    ArmMotors.setVelocity(25, percent);
+    // Start the net
+    NetMotor.setVelocity(-20, percent);
+    wait(500, msec);
+
+    // Start the Belt
     BeltMotor.setVelocity(-100, percent);
-    wait(250, msec);
+
+    // Start moving the arm down
+    ArmMotors.setVelocity(-7, percent);
+    wait(1000, msec); 
+
+    // Stop the arm
     ArmMotors.setVelocity(0, percent);
-
-    // Use the flipper to try to grab it
-    NetMotor.setVelocity(-50, percent);
     wait(500, msec);
 
-    // Bring the arm down a bit
-    ArmMotors.setVelocity(-10, percent);
-    
-    wait(500, msec);
+    // Stop Everything
     ArmMotors.setVelocity(0, percent);
     NetMotor.setVelocity(0, percent);
     BeltMotor.setVelocity(0, percent);

@@ -85,7 +85,7 @@ void ControllerMovement::updateArmMotors(){
 
   // Overrides
   // The net cannot go "down" if the net bumper is active
-  if (NetBumper.PRESSED && net_velocity < 0) net_velocity = 0;
+  // if (NetBumper.PRESSED && net_velocity < 0) net_velocity = 0;
 
   // Multiply the speed by the speed in settings
   arm_velocity *= arm_speed_multiplier;

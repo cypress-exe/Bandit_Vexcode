@@ -25,9 +25,9 @@ void drivercontrol(void){
   Brain.Screen.clearLine();
   Brain.Screen.print("Driver Control...");
 
-  while(true){
+  while(false){
     // Controller Movement
-    ControllerMovement::updateDriveMotors();
+    ControllerMovement::initDriveMotors();
     ControllerMovement::updateArmMotors();
     ControllerMovement::updateBeltMotor();
     
@@ -43,7 +43,4 @@ int main() {
 
   // Run the pre-autonomous function.
   pre_auton();
-
-  // Main Loop
-  // Nothing happens without it being called directly or indirectly through this loop
 }

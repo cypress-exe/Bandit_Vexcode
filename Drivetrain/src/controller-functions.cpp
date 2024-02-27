@@ -33,24 +33,26 @@ void ControllerFunctions::intakeTriball_thread()
     // Stop all other processes from messing with the arm
     tribal_manipulating = true;
 
+    ArmMotors.spinFor(1, seconds);
+
     // Start the Belt
-    BeltMotor.setVelocity(100, percent);
+    // BeltMotor.setVelocity(100, percent);
 
-    // Start the net
-    NetMotor.setVelocity(20, percent);
-    wait(500, msec);
+    // // Start the net
+    // NetMotor.setVelocity(20, percent);
+    // wait(500, msec);
 
-    // Start moving the arm up
-    ArmMotors.setVelocity(7, percent);
-    wait(1000, msec);
+    // // Start moving the arm up
+    // ArmMotors.setVelocity(7, percent);
+    // wait(1000, msec);
 
-    // Stop the arm
-    ArmMotors.setVelocity(0, percent);
-    wait(500, msec);
+    // // Stop the arm
+    // ArmMotors.setVelocity(0, percent);
+    // wait(500, msec);
 
-    // Stop Everything
-    NetMotor.setVelocity(0, percent);
-    BeltMotor.setVelocity(0, percent);
+    // // Stop Everything
+    // NetMotor.setVelocity(0, percent);
+    // BeltMotor.setVelocity(0, percent);
 
     // Resume other processes
     tribal_manipulating = false;

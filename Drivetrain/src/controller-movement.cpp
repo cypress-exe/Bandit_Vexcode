@@ -6,6 +6,7 @@
 
 #include "controller-movement.h"
 
+
 void ControllerMovement::updateDriveMotors(){
   // Left Up and Down is ROBOT Forward and Back (3)
   // Right Right and Left is ROBOT Turning (1)
@@ -58,6 +59,10 @@ void ControllerMovement::updateDriveMotors(){
   LeftDriveMotor.spin(forward);
   RightDriveMotor.spin(forward);
   StrafeMotor.spin(forward);
+}
+
+void ControllerMovement::initDriveMotors(){
+  // setup the callbacks...
 }
 
 void ControllerMovement::updateArmMotors(){

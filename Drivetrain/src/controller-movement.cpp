@@ -6,6 +6,34 @@
 
 #include "controller-movement.h"
 
+void ControllerMovement::initDriveMotors(){
+  // setup the callbacks...
+  Controller1.Axis1.changed(updateDriveMotors);
+  Controller1.Axis3.changed(updateDriveMotors);
+  Controller1.Axis4.changed(updateDriveMotors);
+}
+
+void ControllerMovement::initArmMotors(){
+  // setup the callbacks...
+  Controller1.ButtonL1.pressed(updateArmMotors);
+  Controller1.ButtonR1.pressed(updateArmMotors);
+  Controller1.ButtonDown.pressed(updateArmMotors);
+  Controller1.ButtonUp.pressed(updateArmMotors);
+
+  Controller1.ButtonL1.released(updateArmMotors);
+  Controller1.ButtonR1.released(updateArmMotors);
+  Controller1.ButtonDown.released(updateArmMotors);
+  Controller1.ButtonUp.released(updateArmMotors);
+}
+
+void ControllerMovement::initBeltMotor(){
+  // setup the callbacks...
+  Controller1.ButtonB.pressed(updateBeltMotor);
+  Controller1.ButtonX.pressed(updateBeltMotor);
+
+  Controller1.ButtonB.released(updateBeltMotor);
+  Controller1.ButtonX.released(updateBeltMotor);
+}
 
 void ControllerMovement::updateDriveMotors(){
   // Left Up and Down is ROBOT Forward and Back (3)
@@ -47,7 +75,7 @@ void ControllerMovement::updateDriveMotors(){
   }
 
   // Overrides
-  strafe_motor_velocity += strafe_motor_override;
+  strafe_motor_velocity += strafe_motor_overriden;
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);
@@ -61,12 +89,8 @@ void ControllerMovement::updateDriveMotors(){
   StrafeMotor.spin(forward);
 }
 
-void ControllerMovement::initDriveMotors(){
-  // setup the callbacks...
-}
-
 void ControllerMovement::updateArmMotors(){
-  if (tribal_manipulating) return;
+  if (triball_manipulating) return;
 
   // Get inputs
   bool raise_arm = Controller1.ButtonR1.pressing();
@@ -107,7 +131,7 @@ void ControllerMovement::updateArmMotors(){
 }
 
 void ControllerMovement::updateBeltMotor(){
-  if (tribal_manipulating) return;
+  if (triball_manipulating) return;
   
   // Get inputs
   bool belt_in = Controller1.ButtonB.pressing();

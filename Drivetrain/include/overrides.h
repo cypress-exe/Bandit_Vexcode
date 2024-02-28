@@ -1,4 +1,4 @@
 #pragma once
 
-extern bool tribal_manipulating;
-extern float strafe_motor_override;
+extern bool triball_manipulating;
+extern bool strafe_motor_overriden;

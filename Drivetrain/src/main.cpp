@@ -25,15 +25,12 @@ void drivercontrol(void){
   Brain.Screen.clearLine();
   Brain.Screen.print("Driver Control...");
 
-  while(false){
-    // Controller Movement
-    ControllerMovement::initDriveMotors();
-    ControllerMovement::updateArmMotors();
-    ControllerMovement::updateBeltMotor();
-    
-    // Controller Functions
-    ControllerFunctions::update();
-  }
+  // Controller Movement
+  ControllerMovement::initDriveMotors();
+  ControllerMovement::initArmMotors();
+  ControllerMovement::initBeltMotor();
+  
+  ControllerFunctions::init();
 }
 
 int main() {

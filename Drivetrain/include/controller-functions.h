@@ -3,11 +3,10 @@
 class ControllerFunctions
 {
     public:
-        static void update();
+        static void init();
         static void triangulateTriball();
         static void intakeTriball();
         static void releaseTriball();
         static void intakeTriball_thread();
         static void releaseTriball_thread();
-
 };

@@ -10,30 +10,21 @@
 using namespace vex;
 
 // Called every update frame
-void ControllerFunctions::update()
+void ControllerFunctions::init()
 {
-    // No triball operations if the arm is in use
-    if (!tribal_manipulating)
-    {
-        // Triball Intake
-        if(Controller1.ButtonR2.PRESSED)
-        {
-            intakeTriball();
-        }
-        // Triball Release
-        if(Controller1.ButtonL2.PRESSED)
-        {
-            releaseTriball();
-        }
-    }
+    // Setup callbacks
+    Controller1.ButtonR2.pressed(intakeTriball);
+    Controller1.ButtonL2.pressed(releaseTriball);
 }
 
 void ControllerFunctions::intakeTriball_thread()
 {
     // Stop all other processes from messing with the arm
-    tribal_manipulating = true;
+    triball_manipulating = true;
 
-    ArmMotors.spinFor(1, seconds);
+    Brain.Screen.print("Working...");
+
+    ArmMotors.spinTo(30, degrees);
 
     // Start the Belt
     // BeltMotor.setVelocity(100, percent);
@@ -55,13 +46,13 @@ void ControllerFunctions::intakeTriball_thread()
     // BeltMotor.setVelocity(0, percent);
 
     // Resume other processes
-    tribal_manipulating = false;
+    triball_manipulating = false;
 }
 
 void ControllerFunctions::releaseTriball_thread()
 {
     // Stop all other processes from messing with the arm
-    tribal_manipulating = true;
+    triball_manipulating = true;
 
     // Start the net
     NetMotor.setVelocity(-20, percent);
@@ -84,30 +75,31 @@ void ControllerFunctions::releaseTriball_thread()
     BeltMotor.setVelocity(0, percent);
 
     // Resume other processes
-    tribal_manipulating = false;
+    triball_manipulating = false;
 }
 
 void ControllerFunctions::intakeTriball()
 {
-    thread t2(intakeTriball_thread);
+    if (!triball_manipulating) thread t2(intakeTriball_thread);
 }
 
 void ControllerFunctions::releaseTriball()
 {
-    thread t2(releaseTriball_thread);
+    if (!triball_manipulating) thread t2(releaseTriball_thread);
 }
 
-void stopStrafingMotor_thread()
+
+void triangulate_triball_thread()
 {
     StrafeMotor.stop(brake);
 
     // We have to find the sensor to use. It's janky, but we'll use the strafe_motor_override and whether it's positive or negative
     distance sensor = NULL;
-    if (strafe_motor_override > 0){
-        sensor = RightDistanceSensor;
-    } else {
-        sensor = LeftDistanceSensor;
-    }
+    // if (strafe_motor_overriden > 0){
+    //     sensor = RightDistanceSensor;
+    // } else {
+    //     sensor = LeftDistanceSensor;
+    // }
 
     // Stop once the triball is the correct distance away from the sensor.
     int msecs_waiting = 0;
@@ -120,7 +112,7 @@ void stopStrafingMotor_thread()
     }
 
     // Stop
-    strafe_motor_override = 0;
+    strafe_motor_overriden = 0;
     // Diagnostic Data
     if (msecs_waiting >= 500)
     {
@@ -132,12 +124,17 @@ void stopStrafingMotor_thread()
     wait(500, msec);
     StrafeMotor.stop(coast);
 
+    strafe_motor_overriden = false;
+
     Brain.Screen.clearScreen();
     Brain.Screen.clearLine();
 }
 
 void ControllerFunctions::triangulateTriball(){
     // Get the info from the distance sensors
+
+    Brain.Screen.print("Triangulating triball... Bypassed...");
+    return;
 
     Brain.Screen.clearScreen();
     Brain.Screen.clearLine();
@@ -147,24 +144,24 @@ void ControllerFunctions::triangulateTriball(){
     float left_distance = LeftDistanceSensor.objectDistance(inches);
     float right_distance = RightDistanceSensor.objectDistance(inches);
 
-    strafe_motor_override = 0;
+    strafe_motor_overriden = true;
 
     // Check to see if we should correct
     if (left_distance < triball_alignment_minimum_distance)
     {
         // Move left
-        strafe_motor_override = 1 - triball_adjustment_speed;
+        StrafeMotor.setVelocity(-triball_adjustment_speed, percent);
         Brain.Screen.print("Triball Alignment: Left");
         Brain.Screen.newLine();
-        thread t1(stopStrafingMotor_thread);
+        // thread t1(stopStrafingMotor_thread);
 
     } else if (right_distance < triball_alignment_minimum_distance)
     {
         // Move right
-        strafe_motor_override = triball_adjustment_speed;
+        StrafeMotor.setVelocity(triball_adjustment_speed, percent);
         Brain.Screen.print("Triball Alignment: Right");
         Brain.Screen.newLine();
-        thread t1(stopStrafingMotor_thread);
+        thread t1(triangulate_triball_thread);
     } else 
     {
         Brain.Screen.print("Unable to Locate Triball...");

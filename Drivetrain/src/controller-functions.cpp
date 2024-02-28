@@ -22,28 +22,24 @@ void ControllerFunctions::intakeTriball_thread()
     // Stop all other processes from messing with the arm
     triball_manipulating = true;
 
-    Brain.Screen.print("Working...");
-
-    ArmMotors.spinTo(30, degrees);
-
     // Start the Belt
-    // BeltMotor.setVelocity(100, percent);
+    // BeltMotor.spin(forward);
 
-    // // Start the net
-    // NetMotor.setVelocity(20, percent);
-    // wait(500, msec);
+    // Start the net
+    NetMotor.spinFor(forward, 30, degrees, false);
+    Brain.Screen.print("Running");
 
     // // Start moving the arm up
     // ArmMotors.setVelocity(7, percent);
     // wait(1000, msec);
 
     // // Stop the arm
-    // ArmMotors.setVelocity(0, percent);
+    // ArmMotors.stop();
     // wait(500, msec);
 
     // // Stop Everything
-    // NetMotor.setVelocity(0, percent);
-    // BeltMotor.setVelocity(0, percent);
+    // NetMotor.stop();
+    // BeltMotor.stop();
 
     // Resume other processes
     triball_manipulating = false;
@@ -51,35 +47,36 @@ void ControllerFunctions::intakeTriball_thread()
 
 void ControllerFunctions::releaseTriball_thread()
 {
-    // Stop all other processes from messing with the arm
-    triball_manipulating = true;
+    // // Stop all other processes from messing with the arm
+    // triball_manipulating = true;
 
-    // Start the net
-    NetMotor.setVelocity(-20, percent);
-    wait(500, msec);
+    // // Start the net
+    // NetMotor.setVelocity(-20, percent);
+    // wait(500, msec);
 
-    // Start the Belt
-    BeltMotor.setVelocity(-100, percent);
+    // // Start the Belt
+    // BeltMotor.setVelocity(-100, percent);
 
-    // Start moving the arm down
-    ArmMotors.setVelocity(-7, percent);
-    wait(1000, msec); 
+    // // Start moving the arm down
+    // ArmMotors.setVelocity(-7, percent);
+    // wait(1000, msec); 
 
-    // Stop the arm
-    ArmMotors.setVelocity(0, percent);
-    wait(500, msec);
+    // // Stop the arm
+    // ArmMotors.setVelocity(0, percent);
+    // wait(500, msec);
 
-    // Stop Everything
-    ArmMotors.setVelocity(0, percent);
-    NetMotor.setVelocity(0, percent);
-    BeltMotor.setVelocity(0, percent);
+    // // Stop Everything
+    // ArmMotors.setVelocity(0, percent);
+    // NetMotor.setVelocity(0, percent);
+    // BeltMotor.setVelocity(0, percent);
 
-    // Resume other processes
-    triball_manipulating = false;
+    // // Resume other processes
+    // triball_manipulating = false;
 }
 
 void ControllerFunctions::intakeTriball()
 {
+    ArmMotors.spinFor(1, seconds);
     if (!triball_manipulating) thread t2(intakeTriball_thread);
 }
 

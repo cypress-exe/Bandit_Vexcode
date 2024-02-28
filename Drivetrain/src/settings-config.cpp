@@ -20,10 +20,10 @@ const float turning_speed_multiplier = 0.5;
 const float strafe_speed_multiplier = 0.7;
 
 // Speed of the arm going up and down.
-const float arm_speed_multiplier = 25;
+const float arm_speed = 25;
 
 // Speed of the net mechanism
-const float net_speed_multiplier = 25;
+const float net_speed = 25;
 
 // Speed of the belt
-const float belt_speed_multiplier = 50;
+const float belt_speed = 50;

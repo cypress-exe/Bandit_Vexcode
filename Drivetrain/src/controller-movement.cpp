@@ -24,6 +24,10 @@ void ControllerMovement::initArmMotors(){
   Controller1.ButtonR1.released(updateArmMotors);
   Controller1.ButtonDown.released(updateArmMotors);
   Controller1.ButtonUp.released(updateArmMotors);
+
+  // Update the motors to be the computed velocity
+  ArmMotors.setVelocity(arm_speed, percent);
+  NetMotor.setVelocity(net_speed, percent);
 }
 
 void ControllerMovement::initBeltMotor(){
@@ -33,6 +37,9 @@ void ControllerMovement::initBeltMotor(){
 
   Controller1.ButtonB.released(updateBeltMotor);
   Controller1.ButtonX.released(updateBeltMotor);
+
+  // Update the motors to be the computed velocity
+  BeltMotor.setVelocity(belt_speed, percent);
 }
 
 void ControllerMovement::updateDriveMotors(){
@@ -64,18 +71,14 @@ void ControllerMovement::updateDriveMotors(){
     right_motor_velocity += drive_axis_value;
   }
 
-
   if (std::abs(turning_axis_value) > turning_deadband) {
     left_motor_velocity += turning_axis_value;
     right_motor_velocity -= turning_axis_value;
   }
 
-  if (std::abs(strafe_axis_value) > strafe_deadband) {
+  if ((std::abs(strafe_axis_value) > strafe_deadband) && (!strafe_motor_overriden)) {
     strafe_motor_velocity += strafe_axis_value;
   }
-
-  // Overrides
-  strafe_motor_velocity += strafe_motor_overriden;
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);
@@ -100,8 +103,8 @@ void ControllerMovement::updateArmMotors(){
   bool net_up = Controller1.ButtonUp.pressing();
 
   // Create Variables
-  float arm_velocity = 0;
-  float net_velocity = 0;
+  int arm_velocity = 0;
+  int net_velocity = 0;
 
   // Logic
   // Edit the variables to be 1, 0, or -1
@@ -112,22 +115,30 @@ void ControllerMovement::updateArmMotors(){
   if (net_down) net_velocity += 1;
   if (net_up) net_velocity += -1;
 
-  // Overrides
-  // The net cannot go "down" if the net bumper is active
-  // if (NetBumper.PRESSED && net_velocity < 0) net_velocity = 0;
+  // Update the motors to reflect the variables
+  switch (arm_velocity) {
+    case 1:
+      ArmMotors.spin(forward);
+      break;
+    case 0:
+      ArmMotors.stop();
+      break;
+    case -1:
+      ArmMotors.spin(reverse);
+      break;
+  }
 
-  // Multiply the speed by the speed in settings
-  arm_velocity *= arm_speed_multiplier;
-  net_velocity *= net_speed_multiplier;
-
-  // Update the motors to be the computed velocity
-  ArmMotors.setVelocity(arm_velocity, percent);
-  NetMotor.setVelocity(net_velocity, percent);
-
-
-  // Spin the motors in the forward direction.
-  ArmMotors.spin(forward);
-  NetMotor.spin(forward);
+  switch (net_velocity) {
+    case 1:
+      NetMotor.spin(forward);
+      break;
+    case 0:
+      NetMotor.stop();
+      break;
+    case -1:
+      NetMotor.spin(reverse);
+      break;
+  }
 }
 
 void ControllerMovement::updateBeltMotor(){
@@ -138,7 +149,7 @@ void ControllerMovement::updateBeltMotor(){
   bool belt_out = Controller1.ButtonX.pressing();
 
   // Create Variables
-  float belt_velocity = 0;
+  int belt_velocity = 0;
 
   // Logic
   // Edit the variables to be 1, 0, or -1
@@ -146,12 +157,16 @@ void ControllerMovement::updateBeltMotor(){
   if (belt_in) belt_velocity += 1;
   if (belt_out) belt_velocity += -1;
 
-  // Multiply the speed by the speed in settings
-  belt_velocity *= belt_speed_multiplier;
-
-  // Update the motors to be the computed velocity
-  BeltMotor.setVelocity(belt_velocity, percent);
-
-  // Spin the motors in the forward direction.
-  BeltMotor.spin(forward);
+  // Update the motors to reflect the variables
+  switch (belt_velocity) {
+    case 1:
+      BeltMotor.spin(forward);
+      break;
+    case 0:
+      BeltMotor.stop();
+      break;
+    case -1:
+      BeltMotor.spin(reverse);
+      break;
+  }
 }

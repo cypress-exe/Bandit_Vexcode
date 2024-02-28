@@ -59,6 +59,7 @@ motor BeltMotor = motor(PORT8, ratio18_1, false);
 
 void pre_auton(void) {
   // set motors to unique braking setting if applicable
+  ArmMotors.stop(hold);
   NetMotor.stop(hold);
 
   calibrateDrivetrain();

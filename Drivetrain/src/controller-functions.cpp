@@ -23,23 +23,17 @@ void ControllerFunctions::intakeTriball_thread()
     triball_manipulating = true;
 
     // Start the Belt
-    // BeltMotor.spin(forward);
+    BeltMotor.spin(forward);
 
-    // Start the net
-    NetMotor.spinFor(forward, 30, degrees, false);
-    Brain.Screen.print("Running");
+    // Bring the net down & arm up
+    NetMotor.spinFor(forward, 420, degrees, false);
+    ArmMotors.spinFor(forward, 205, degrees, false);
 
-    // // Start moving the arm up
-    // ArmMotors.setVelocity(7, percent);
-    // wait(1000, msec);
-
-    // // Stop the arm
-    // ArmMotors.stop();
-    // wait(500, msec);
-
-    // // Stop Everything
-    // NetMotor.stop();
-    // BeltMotor.stop();
+    // Wait for 1 second
+    wait(1, seconds);
+    
+    // Stop the belt
+    BeltMotor.stop();
 
     // Resume other processes
     triball_manipulating = false;
@@ -47,36 +41,30 @@ void ControllerFunctions::intakeTriball_thread()
 
 void ControllerFunctions::releaseTriball_thread()
 {
-    // // Stop all other processes from messing with the arm
-    // triball_manipulating = true;
+    // Stop all other processes from messing with the arm
+    triball_manipulating = true;
 
-    // // Start the net
-    // NetMotor.setVelocity(-20, percent);
-    // wait(500, msec);
+    // Bring the net up
+    NetMotor.spinFor(reverse, 400, degrees, false);
 
-    // // Start the Belt
-    // BeltMotor.setVelocity(-100, percent);
+    // Start the Belt
+    BeltMotor.spin(reverse);
 
-    // // Start moving the arm down
-    // ArmMotors.setVelocity(-7, percent);
-    // wait(1000, msec); 
+    // Wait for 1 second
+    wait(1, seconds);
+    
+    // Stop the belt
+    BeltMotor.stop();
 
-    // // Stop the arm
-    // ArmMotors.setVelocity(0, percent);
-    // wait(500, msec);
+    // Put the arm down again
+    ArmMotors.spinFor(reverse, 205, degrees, false);
 
-    // // Stop Everything
-    // ArmMotors.setVelocity(0, percent);
-    // NetMotor.setVelocity(0, percent);
-    // BeltMotor.setVelocity(0, percent);
-
-    // // Resume other processes
-    // triball_manipulating = false;
+    // Resume other processes
+    triball_manipulating = false;
 }
 
 void ControllerFunctions::intakeTriball()
 {
-    ArmMotors.spinFor(1, seconds);
     if (!triball_manipulating) thread t2(intakeTriball_thread);
 }
 

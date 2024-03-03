@@ -26,7 +26,7 @@ void ControllerFunctions::intakeTriball_thread()
     BeltMotor.spin(forward);
 
     // Bring the net down & arm up
-    NetMotor.spinFor(forward, 420, degrees, false);
+    NetMotor.spinFor(forward, 430, degrees, false);
     ArmMotors.spinFor(forward, 205, degrees, false);
 
     // Wait for 1 second
@@ -45,7 +45,7 @@ void ControllerFunctions::releaseTriball_thread()
     triball_manipulating = true;
 
     // Bring the net up
-    NetMotor.spinFor(reverse, 400, degrees, false);
+    NetMotor.spinFor(reverse, 430, degrees, false);
 
     // Start the Belt
     BeltMotor.spin(reverse);

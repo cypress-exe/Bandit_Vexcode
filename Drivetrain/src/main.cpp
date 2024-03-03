@@ -14,10 +14,6 @@ void autonomous(void){
   Brain.Screen.print("Autonomous...");
 
   Drivetrain.driveFor(750, mm);
-  // ControllerFunctions::intakeTriball_thread();
-  // Drivetrain.turnFor(90, degrees);
-  // Drivetrain.driveFor(50, mm);
-  // ControllerFunctions::releaseTriball_thread();
 }
 
 void drivercontrol(void){

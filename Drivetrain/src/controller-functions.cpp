@@ -25,6 +25,9 @@ void ControllerFunctions::intakeTriball_thread()
     // Start the Belt
     BeltMotor.spin(forward);
 
+    // Triangulate Triball
+    // triangulateTriball();
+
     // Bring the net down & arm up
     NetMotor.spinFor(forward, 430, degrees, false);
     ArmMotors.spinFor(forward, 205, degrees, false);
@@ -74,52 +77,11 @@ void ControllerFunctions::releaseTriball()
 }
 
 
-void triangulate_triball_thread()
-{
-    StrafeMotor.stop(brake);
-
-    // We have to find the sensor to use. It's janky, but we'll use the strafe_motor_override and whether it's positive or negative
-    distance sensor = NULL;
-    // if (strafe_motor_overriden > 0){
-    //     sensor = RightDistanceSensor;
-    // } else {
-    //     sensor = LeftDistanceSensor;
-    // }
-
-    // Stop once the triball is the correct distance away from the sensor.
-    int msecs_waiting = 0;
-    float triball_distance = 0;
-    while(triball_distance < triball_alignment_maximum_distance && msecs_waiting < 500) { // 1/2 second timeout
-        // Update Triball Distance
-        triball_distance = sensor.objectDistance(inches);
-        wait(1, msec);
-        msecs_waiting += 1;
-    }
-
-    // Stop
-    strafe_motor_overriden = 0;
-    // Diagnostic Data
-    if (msecs_waiting >= 500)
-    {
-        Brain.Screen.print("Triball Triangulation Failed... Canceled.");
-        Brain.Screen.newLine();
-    }
-
-    // Reset braking after 1/2 second
-    wait(500, msec);
-    StrafeMotor.stop(coast);
-
-    strafe_motor_overriden = false;
-
-    Brain.Screen.clearScreen();
-    Brain.Screen.clearLine();
-}
-
 void ControllerFunctions::triangulateTriball(){
     // Get the info from the distance sensors
 
-    Brain.Screen.print("Triangulating triball... Bypassed...");
-    return;
+    // Brain.Screen.print("Triangulating triball... Bypassed...");
+    // return;
 
     Brain.Screen.clearScreen();
     Brain.Screen.clearLine();
@@ -135,20 +97,21 @@ void ControllerFunctions::triangulateTriball(){
     if (left_distance < triball_alignment_minimum_distance)
     {
         // Move left
-        StrafeMotor.setVelocity(-triball_adjustment_speed, percent);
         Brain.Screen.print("Triball Alignment: Left");
-        Brain.Screen.newLine();
-        // thread t1(stopStrafingMotor_thread);
+        StrafeMotor.spinFor(reverse, 60, degrees, true);
 
     } else if (right_distance < triball_alignment_minimum_distance)
     {
         // Move right
-        StrafeMotor.setVelocity(triball_adjustment_speed, percent);
         Brain.Screen.print("Triball Alignment: Right");
-        Brain.Screen.newLine();
-        thread t1(triangulate_triball_thread);
+        StrafeMotor.spinFor(forward, 60, degrees, true);
     } else 
     {
         Brain.Screen.print("Unable to Locate Triball...");
     }
+    
+    // Reset motor braking mode
+    StrafeMotor.stop(coast);
+
+    strafe_motor_overriden = false;
 }

@@ -4,7 +4,6 @@ class ControllerFunctions
 {
     public:
         static void init();
-        static void triangulateTriball();
         static void intakeTriball();
         static void releaseTriball();
         static void intakeTriball_thread();

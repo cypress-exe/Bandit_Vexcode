@@ -32,11 +32,11 @@ void ControllerMovement::initArmMotors(){
 
 void ControllerMovement::initBeltMotor(){
   // setup the callbacks...
-  Controller1.ButtonB.pressed(updateBeltMotor);
-  Controller1.ButtonX.pressed(updateBeltMotor);
+  Controller1.ButtonLeft.pressed(updateBeltMotor);
+  Controller1.ButtonRight.pressed(updateBeltMotor);
 
-  Controller1.ButtonB.released(updateBeltMotor);
-  Controller1.ButtonX.released(updateBeltMotor);
+  Controller1.ButtonLeft.released(updateBeltMotor);
+  Controller1.ButtonRight.released(updateBeltMotor);
 
   // Update the motors to be the computed velocity
   BeltMotor.setVelocity(belt_speed, percent);
@@ -145,8 +145,8 @@ void ControllerMovement::updateBeltMotor(){
   if (triball_manipulating) return;
   
   // Get inputs
-  bool belt_in = Controller1.ButtonB.pressing();
-  bool belt_out = Controller1.ButtonX.pressing();
+  bool belt_in = Controller1.ButtonLeft.pressing();
+  bool belt_out = Controller1.ButtonRight.pressing();
 
   // Create Variables
   int belt_velocity = 0;

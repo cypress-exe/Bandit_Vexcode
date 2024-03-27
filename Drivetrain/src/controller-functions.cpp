@@ -15,7 +15,9 @@ void ControllerFunctions::init()
     // Setup callbacks
     Controller1.ButtonR2.pressed(intakeTriball);
     Controller1.ButtonL2.pressed(releaseTriball);
-    Controller1.ButtonA.pressed(launch);
+    Controller1.ButtonX.pressed(launch);
+    Controller1.ButtonB.pressed(launch_recover);
+    Controller1.ButtonA.pressed(prepareLaunch);
 }
 
 
@@ -32,6 +34,18 @@ void ControllerFunctions::releaseTriball()
 void ControllerFunctions::launch()
 {
     if (!triball_manipulating) thread t1(launch_thread);   
+}
+
+void ControllerFunctions::launch_recover()
+{
+    if (!triball_manipulating) thread t1(launch_recover_thread);   
+}
+
+void ControllerFunctions::prepareLaunch()
+{
+    if (!triball_manipulating) {
+        NetMotor.spinFor(forward, 50, degrees, false);
+    }
 }
 
 void ControllerFunctions::intakeTriball_thread()
@@ -97,6 +111,21 @@ void ControllerFunctions::launch_thread()
 
     // Reset speed
     ArmMotors.setVelocity(arm_speed, percent);
+
+    // Resume other processes
+    triball_manipulating = false;
+}
+
+void ControllerFunctions::launch_recover_thread()
+{
+    // Stop all other processes from messing with the arm
+    triball_manipulating = true;
+
+    // Move net
+    NetMotor.spinFor(reverse, 50, degrees, false);
+
+    // Move arm
+    ArmMotors.spinFor(reverse, 400, degrees, true);
 
     // Resume other processes
     triball_manipulating = false;

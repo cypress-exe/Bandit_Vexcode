@@ -60,8 +60,8 @@ void ControllerFunctions::intakeTriball_thread()
     NetMotor.spinFor(forward, 290, degrees, false);
     ArmMotors.spinFor(forward, 210, degrees, false);
 
-    // Wait for 1.5 second
-    wait(1500, msec);
+    // Wait for 1.5 seconds
+    this_thread::sleep_for(1500);
     
     // Stop the belt
     BeltMotor.stop();
@@ -81,8 +81,8 @@ void ControllerFunctions::releaseTriball_thread()
     // Start the Belt
     BeltMotor.spin(reverse);
 
-    // Wait for 1.5 second
-    wait(1500, msec);
+    // Wait for 1 second
+    this_thread::sleep_for(1000);
     
     // Stop the belt
     BeltMotor.stop();

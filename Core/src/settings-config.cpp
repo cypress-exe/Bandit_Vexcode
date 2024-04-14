@@ -2,8 +2,9 @@
 
 // Deadband stops the motors when Axis values are close to zero.
 const int drive_deadband = 5;
-const int turning_deadband = 5;
 const int strafe_deadband = 10;
+const int turning_deadband = 5;
+const float robot_heading_correction_deadband_radians = 0.08; // Almost 5 degrees
 
 // Robot Alignment To Triball
 const float triball_adjustment_speed = 15;

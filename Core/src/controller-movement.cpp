@@ -48,43 +48,58 @@ void ControllerMovement::updateDriveMotors(){
   // Left Right and Left is ROBOT Strafe (4)
 
   // Get inputs
-  float drive_axis_value = (float)Controller1.Axis3.position();
-  float turning_axis_value = (float)Controller1.Axis1.position();
-  float strafe_axis_value = (float)Controller1.Axis4.position();
+  float forward_backward_axis_value = (float)Controller1.Axis3.position();
+  float left_right_axis_value = (float)Controller1.Axis4.position();
+  float turning_x_axis_value = (float)Controller1.Axis1.position();
+  float turning_y_axis_value = (float)Controller1.Axis2.position();
 
-  // Create variables
+  // Deadband --> Ignore really small values
+  forward_backward_axis_value = (std::abs(forward_backward_axis_value) > drive_deadband ? forward_backward_axis_value : 0 );
+  left_right_axis_value = (std::abs(left_right_axis_value) > drive_deadband ? left_right_axis_value : 0 );
+  turning_x_axis_value = (std::abs(turning_x_axis_value) > drive_deadband ? turning_x_axis_value : 0 );
+  turning_y_axis_value = (std::abs(turning_y_axis_value) > drive_deadband ? turning_y_axis_value : 0 );
+
+  // Multiply the inputs by the speed in settings
+  forward_backward_axis_value *= movement_speed_multiplier;
+  left_right_axis_value *= strafe_speed_multiplier;
+
+  // Default Motor Velocities
   float left_motor_velocity = 0;
   float right_motor_velocity = 0;
   float strafe_motor_velocity = 0;
 
-  // Multiply the inputs by the speed in settings
-  drive_axis_value *= movement_speed_multiplier;
-  turning_axis_value *= turning_speed_multiplier;
-  strafe_axis_value *= strafe_speed_multiplier;
+  // Get robot heading from Inertia Sensor
+  float robot_heading_radians = InertialSensor.rotation(degrees);
 
 
-  // Set the speed of the motor only if the value is more than the deadband.
+  // Movement
+  left_motor_velocity += forward_backward_axis_value * cos(robot_heading_radians) + left_right_axis_value * sin(robot_heading_radians);
+  right_motor_velocity += forward_backward_axis_value * cos(robot_heading_radians) + left_right_axis_value * sin(robot_heading_radians);
+  strafe_motor_velocity += left_right_axis_value * cos(robot_heading_radians) - forward_backward_axis_value * sin(robot_heading_radians);
 
-  // Movement Logic
-  if (std::abs(drive_axis_value) > drive_deadband) {
-    left_motor_velocity += drive_axis_value;
-    right_motor_velocity += drive_axis_value;
+
+  // Turning to align to joystick.
+  // Calculate target heading
+  float target_heading_radians = atan2(turning_y_axis_value, turning_x_axis_value);
+
+  // Calculate heading error
+  float heading_error_radians = target_heading_radians - robot_heading_radians;
+
+  // Determine if heading error is big enough to act
+  if (heading_error_radians > robot_heading_correction_deadband_radians)
+  {
+    // Multiply error by speed in settings
+    float turning_value = turning_speed_multiplier * heading_error_radians; 
+
+    left_motor_velocity += turning_value;
+    right_motor_velocity -= turning_value;
   }
 
-  if (std::abs(turning_axis_value) > turning_deadband) {
-    left_motor_velocity += turning_axis_value;
-    right_motor_velocity -= turning_axis_value;
-  }
-
-  if ((std::abs(strafe_axis_value) > strafe_deadband) && (!strafe_motor_overriden)) {
-    strafe_motor_velocity += strafe_axis_value;
-  }
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);
   RightDriveMotor.setVelocity(right_motor_velocity, percent);
   StrafeMotor.setVelocity(strafe_motor_velocity, percent);
-
 
   // Spin the motors in the forward direction.
   LeftDriveMotor.spin(forward);

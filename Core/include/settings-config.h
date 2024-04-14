@@ -1,8 +1,9 @@
 #pragma once
 
 extern const int drive_deadband;
-extern const int turning_deadband;
 extern const int strafe_deadband;
+extern const int turning_deadband;
+extern const float robot_heading_correction_deadband_radians;
 extern const float triball_adjustment_speed;
 extern const float triball_alignment_minimum_distance;
 extern const float triball_alignment_maximum_distance;

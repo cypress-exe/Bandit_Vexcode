@@ -16,9 +16,6 @@ controller Controller1 = controller(primary);
 
 // Sensors
 inertial InertialSensor = inertial(PORT19);
-distance LeftDistanceSensor = distance(PORT20);
-distance RightDistanceSensor = distance(PORT11);
-bumper NetBumper = bumper(Brain.ThreeWirePort.H);
 
 // Drivetrain calibration
 void calibrateDrivetrain() {

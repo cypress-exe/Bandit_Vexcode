@@ -6,9 +6,6 @@ extern brain Brain;
 
 // VEXcode devices
 extern inertial InertialSensor;
-extern distance LeftDistanceSensor;
-extern distance RightDistanceSensor;
-extern bumper NetBumper;
 
 extern controller Controller1;
 extern motor LeftDriveMotor;

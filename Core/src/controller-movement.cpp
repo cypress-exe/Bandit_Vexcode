@@ -43,9 +43,8 @@ void ControllerMovement::initBeltMotor(){
 }
 
 void ControllerMovement::updateDriveMotors(){
-  // Left Up and Down is ROBOT Forward and Back (3)
-  // Right Right and Left is ROBOT Turning (1)
-  // Left Right and Left is ROBOT Strafe (4)
+  // Left Joystick controls robot position (up = up, down = down, left = left, right = right)
+  // Right Joystick controls robot absolute orientation. (up = forward, down = backward, etc...)
 
   // Get inputs
   float forward_backward_axis_value = (float)Controller1.Axis3.position();
@@ -55,9 +54,9 @@ void ControllerMovement::updateDriveMotors(){
 
   // Deadband --> Ignore really small values
   forward_backward_axis_value = (std::abs(forward_backward_axis_value) > drive_deadband ? forward_backward_axis_value : 0 );
-  left_right_axis_value = (std::abs(left_right_axis_value) > drive_deadband ? left_right_axis_value : 0 );
-  turning_x_axis_value = (std::abs(turning_x_axis_value) > drive_deadband ? turning_x_axis_value : 0 );
-  turning_y_axis_value = (std::abs(turning_y_axis_value) > drive_deadband ? turning_y_axis_value : 0 );
+  left_right_axis_value = (std::abs(left_right_axis_value) > strafe_deadband ? left_right_axis_value : 0 );
+  turning_x_axis_value = (std::abs(turning_x_axis_value) > turning_deadband ? turning_x_axis_value : 0 );
+  turning_y_axis_value = (std::abs(turning_y_axis_value) > turning_deadband ? turning_y_axis_value : 0 );
 
   // Multiply the inputs by the speed in settings
   forward_backward_axis_value *= movement_speed_multiplier;
@@ -82,11 +81,14 @@ void ControllerMovement::updateDriveMotors(){
   // Calculate target heading
   float target_heading_radians = atan2(turning_y_axis_value, turning_x_axis_value);
 
+  // Orient target heading to be up = 0. Subtract 1/2 pi.
+  target_heading_radians -= 0.5 * M_PI;
+
   // Calculate heading error
   float heading_error_radians = target_heading_radians - robot_heading_radians;
 
   // Determine if heading error is big enough to act
-  if (heading_error_radians > robot_heading_correction_deadband_radians)
+  if (std::abs(heading_error_radians) > robot_heading_correction_deadband_radians)
   {
     // Multiply error by speed in settings
     float turning_value = turning_speed_multiplier * heading_error_radians; 

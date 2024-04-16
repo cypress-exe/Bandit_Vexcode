@@ -68,7 +68,13 @@ void ControllerMovement::updateDriveMotors(){
   float strafe_motor_velocity = 0;
 
   // Get robot heading from Inertia Sensor
-  float robot_heading_radians = InertialSensor.rotation(degrees);
+  float robot_heading_degrees = InertialSensor.heading(degrees);
+
+  // Convert to radians
+  float robot_heading_radians = robot_heading_degrees * (M_PI / 180);
+
+  Brain.Screen.newLine();
+  Brain.Screen.print(robot_heading_radians);
 
 
   // Movement

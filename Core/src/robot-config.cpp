@@ -15,7 +15,7 @@ brain Brain;
 controller Controller1 = controller(primary);
 
 // Sensors
-inertial InertialSensor = inertial(PORT19);
+inertial InertialSensor = inertial(PORT18);
 
 // Drivetrain calibration
 void calibrateDrivetrain() {

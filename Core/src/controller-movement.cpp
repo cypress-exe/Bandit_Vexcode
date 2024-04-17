@@ -74,7 +74,7 @@ void ControllerMovement::updateDriveMotors(){
   float robot_heading_radians = robot_heading_degrees * (M_PI / 180);
 
   Brain.Screen.newLine();
-  Brain.Screen.print(robot_heading_radians);
+  Brain.Screen.print(robot_heading_degrees);
 
 
   // Movement
@@ -99,10 +99,13 @@ void ControllerMovement::updateDriveMotors(){
     // Multiply error by speed in settings
     float turning_value = turning_speed_multiplier * heading_error_radians; 
 
-    left_motor_velocity += turning_value;
-    right_motor_velocity -= turning_value;
+    // left_motor_velocity += turning_value;
+    // right_motor_velocity -= turning_value;
   }
 
+  // left_motor_velocity = 0;
+  // right_motor_velocity = 0;
+  // strafe_motor_velocity = 0;
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);

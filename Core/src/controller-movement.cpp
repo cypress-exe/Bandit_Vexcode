@@ -54,13 +54,13 @@ void ControllerMovement::updateDriveMotors(){
 
   // Deadband --> Ignore really small values
   forward_backward_axis_value = (std::abs(forward_backward_axis_value) > drive_deadband ? forward_backward_axis_value : 0 );
-  left_right_axis_value = (std::abs(left_right_axis_value) > strafe_deadband ? left_right_axis_value : 0 );
+  left_right_axis_value = (std::abs(left_right_axis_value) > drive_deadband ? left_right_axis_value : 0 );
   turning_x_axis_value = (std::abs(turning_x_axis_value) > turning_deadband ? turning_x_axis_value : 0 );
   turning_y_axis_value = (std::abs(turning_y_axis_value) > turning_deadband ? turning_y_axis_value : 0 );
 
   // Multiply the inputs by the speed in settings
   forward_backward_axis_value *= movement_speed_multiplier;
-  left_right_axis_value *= strafe_speed_multiplier;
+  left_right_axis_value *= movement_speed_multiplier;
 
   // Default Motor Velocities
   float left_motor_velocity = 0;
@@ -71,7 +71,7 @@ void ControllerMovement::updateDriveMotors(){
   float robot_heading_degrees = InertialSensor.heading(degrees);
 
   // Convert to radians
-  float robot_heading_radians = robot_heading_degrees * (M_PI / 180);
+  double robot_heading_radians = robot_heading_degrees * (M_PI / 180);
 
   Brain.Screen.newLine();
   Brain.Screen.print(robot_heading_degrees);
@@ -84,11 +84,17 @@ void ControllerMovement::updateDriveMotors(){
 
 
   // Turning to align to joystick.
+  // Convert turning axis values into radians. Axis values are in [-100, 100] and radians are in [-2pi, 2pi]
+  double target_x_radians = (turning_x_axis_value / 50) * M_PI;
+  double target_y_radians = (turning_y_axis_value / 50) * M_PI;
+
   // Calculate target heading
-  float target_heading_radians = atan2(turning_y_axis_value, turning_x_axis_value);
+  double target_heading_radians = atan(target_y_radians, target_x_radians);
 
   // Orient target heading to be up = 0. Subtract 1/2 pi.
   target_heading_radians -= 0.5 * M_PI;
+
+  print(target_heading_radians * (180 / M_PI));
 
   // Calculate heading error
   float heading_error_radians = target_heading_radians - robot_heading_radians;

@@ -5,6 +5,9 @@ compile_commands.json
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode
 
+# Some VEX things to ignore:
+.vscode/c_cpp_properties.json
+
 ### VisualStudioCode ###
 .vscode/settings.json
 .vscode/tasks.json

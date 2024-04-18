@@ -8,9 +8,10 @@
 
 void ControllerMovement::initDriveMotors(){
   // setup the callbacks...
-  Controller1.Axis1.changed(updateDriveMotors);
   Controller1.Axis3.changed(updateDriveMotors);
   Controller1.Axis4.changed(updateDriveMotors);
+  Controller1.Axis1.changed(updateDriveMotors);
+  Controller1.Axis2.changed(updateDriveMotors);
 }
 
 void ControllerMovement::initArmMotors(){
@@ -55,8 +56,6 @@ void ControllerMovement::updateDriveMotors(){
   // Deadband --> Ignore really small values
   forward_backward_axis_value = (std::abs(forward_backward_axis_value) > drive_deadband ? forward_backward_axis_value : 0 );
   left_right_axis_value = (std::abs(left_right_axis_value) > drive_deadband ? left_right_axis_value : 0 );
-  turning_x_axis_value = (std::abs(turning_x_axis_value) > turning_deadband ? turning_x_axis_value : 0 );
-  turning_y_axis_value = (std::abs(turning_y_axis_value) > turning_deadband ? turning_y_axis_value : 0 );
 
   // Multiply the inputs by the speed in settings
   forward_backward_axis_value *= movement_speed_multiplier;
@@ -73,9 +72,6 @@ void ControllerMovement::updateDriveMotors(){
   // Convert to radians
   double robot_heading_radians = robot_heading_degrees * (M_PI / 180);
 
-  Brain.Screen.newLine();
-  Brain.Screen.print(robot_heading_degrees);
-
 
   // Movement
   left_motor_velocity += forward_backward_axis_value * cos(robot_heading_radians) + left_right_axis_value * sin(robot_heading_radians);
@@ -89,21 +85,29 @@ void ControllerMovement::updateDriveMotors(){
   double target_y_radians = (turning_y_axis_value / 50) * M_PI;
 
   // Calculate target heading
-  double target_heading_radians = atan(target_y_radians, target_x_radians);
+  double target_heading_radians = atan2(target_x_radians, target_y_radians);
 
-  // Orient target heading to be up = 0. Subtract 1/2 pi.
-  target_heading_radians -= 0.5 * M_PI;
+  // The target heading is in radians from -pi to pi. It needs to be in radians from 0 to 2pi.
+  if (target_heading_radians < 0) {
+    target_heading_radians = (2 * M_PI) + target_heading_radians;
+  }
 
-  print(target_heading_radians * (180 / M_PI));
+  // Calculate the corrections strength. Proportional to how far off the origin the joystick is.
+  float correction_strength = (turning_x_axis_value / 200) + (turning_y_axis_value / 200);
 
   // Calculate heading error
   float heading_error_radians = target_heading_radians - robot_heading_radians;
+  // NOT WORKING. I NEED TO USE A BETTER FUNCTION TO FIND THE DIFFERENCE BETWEEN TWO ANGLES
+
+  Brain.Screen.clearLine();
+  Brain.Screen.print(heading_error_radians);
 
   // Determine if heading error is big enough to act
   if (std::abs(heading_error_radians) > robot_heading_correction_deadband_radians)
   {
+    Brain.Screen.printAt(0, 1, "Running");
     // Multiply error by speed in settings
-    float turning_value = turning_speed_multiplier * heading_error_radians; 
+    float turning_value = turning_speed_multiplier * heading_error_radians * correction_strength; 
 
     // left_motor_velocity += turning_value;
     // right_motor_velocity -= turning_value;

@@ -85,7 +85,7 @@ void ControllerMovement::updateDriveMotors(){
   double target_y_radians = (turning_y_axis_value / 50) * M_PI;
 
   // Calculate target heading
-  double target_heading_radians = atan2(target_x_radians, target_y_radians);
+  double target_heading_radians = atan2(target_x_radians, target_y_radians); // x and y are flipped, but it magicaly works...
 
   // The target heading is in radians from -pi to pi. It needs to be in radians from 0 to 2pi.
   if (target_heading_radians < 0) {
@@ -93,11 +93,17 @@ void ControllerMovement::updateDriveMotors(){
   }
 
   // Calculate the corrections strength. Proportional to how far off the origin the joystick is.
-  float correction_strength = (turning_x_axis_value / 200) + (turning_y_axis_value / 200);
+  float correction_strength = 1 - std::abs(2 * (std::sqrt(turning_x_axis_value) + std::sqrt(turning_y_axis_value)));
+
+  // Deadband for correction strength
+  correction_strength = (correction_strength > turning_deadband ? correction_strength : 0);
 
   // Calculate heading error
   float heading_error_radians = target_heading_radians - robot_heading_radians;
-  // NOT WORKING. I NEED TO USE A BETTER FUNCTION TO FIND THE DIFFERENCE BETWEEN TWO ANGLES
+  if (std::abs(heading_error_radians > M_PI)){
+    if (heading_error_radians > 0) heading_error_radians = M_PI - heading_error_radians;
+    else heading_error_radians = M_Pi + heading_error_radians;
+  }
 
   Brain.Screen.clearLine();
   Brain.Screen.print(heading_error_radians);

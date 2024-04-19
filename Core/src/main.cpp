@@ -27,18 +27,6 @@ void drivercontrol(void){
   ControllerMovement::initBeltMotor();
   
   ControllerFunctions::init();
-
-  // while (true){
-  //   //float robot_heading_degrees = InertialSensor.gyroRate(vex::axisType::zaxis, vex::velocityUnits::dps);
-
-  //   double robot_heading_degrees = InertialSensor.heading(degrees);
-
-  //   Brain.Screen.clearScreen();
-  //   Brain.Screen.clearLine();
-  //   Brain.Screen.print(robot_heading_degrees);
-
-  //   wait(100, msec);
-  // }
 }
 
 int main() {

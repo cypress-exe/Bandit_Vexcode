@@ -100,13 +100,13 @@ void ControllerMovement::updateDriveMotors(){
 
   // Calculate heading error
   float heading_error_radians = target_heading_radians - robot_heading_radians;
-  if (std::abs(heading_error_radians > M_PI)){
-    if (heading_error_radians > 0) heading_error_radians = M_PI - heading_error_radians;
-    else heading_error_radians = M_Pi + heading_error_radians;
+  if (std::abs(heading_error_radians) > M_PI){
+    if (heading_error_radians > 0) heading_error_radians = heading_error_radians - M_PI;
+    else heading_error_radians = M_PI + heading_error_radians;
   }
 
   Brain.Screen.clearLine();
-  Brain.Screen.print(heading_error_radians);
+  Brain.Screen.print(heading_error_radians * (180 / M_PI));
 
   // Determine if heading error is big enough to act
   if (std::abs(heading_error_radians) > robot_heading_correction_deadband_radians)

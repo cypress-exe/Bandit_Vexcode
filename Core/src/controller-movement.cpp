@@ -72,6 +72,10 @@ void ControllerMovement::updateDriveMotors(){
   // Convert to radians
   double robot_heading_radians = robot_heading_degrees * (M_PI / 180);
 
+  // The robot heading is in radians from 0 to 2pi. It needs to be in radians from -pi to pi.
+  if (robot_heading_radians > M_PI) {
+    robot_heading_radians -= M_TWOPI;
+  }
 
   // Movement
   left_motor_velocity += forward_backward_axis_value * cos(robot_heading_radians) + left_right_axis_value * sin(robot_heading_radians);
@@ -87,11 +91,6 @@ void ControllerMovement::updateDriveMotors(){
   // Calculate target heading
   double target_heading_radians = atan2(target_x_radians, target_y_radians); // x and y are flipped, but it magicaly works...
 
-  // The target heading is in radians from -pi to pi. It needs to be in radians from 0 to 2pi.
-  if (target_heading_radians < 0) {
-    target_heading_radians = (2 * M_PI) + target_heading_radians;
-  }
-
   // Calculate the corrections strength. Proportional to how far off the origin the joystick is.
   float correction_strength = 1 - std::abs(2 * (std::sqrt(turning_x_axis_value) + std::sqrt(turning_y_axis_value)));
 
@@ -99,12 +98,17 @@ void ControllerMovement::updateDriveMotors(){
   correction_strength = (correction_strength > turning_deadband ? correction_strength : 0);
 
   // Calculate heading error
+  // float heading_error_radians = target_heading_radians - robot_heading_radians;
+  // if (std::abs(heading_error_radians) > M_PI){
+  //   if (heading_error_radians > 0) heading_error_radians = heading_error_radians - M_PI;
+  //   else heading_error_radians = M_PI + heading_error_radians;
+  // }
   float heading_error_radians = target_heading_radians - robot_heading_radians;
-  if (std::abs(heading_error_radians) > M_PI){
-    if (heading_error_radians > 0) heading_error_radians = heading_error_radians - M_PI;
-    else heading_error_radians = M_PI + heading_error_radians;
-  }
+  if (heading_error_radians > M_PI) heading_error_radians -= M_TWOPI;
+  if (heading_error_radians < -M_PI) heading_error_radians += M_TWOPI;
+  //heading_error_radians += (heading_error_radians > M_PI) ? M_TWOPI : (heading_error_radians < -M_PI) ? M_TWOPI : 0;
 
+  Brain.Screen.clearScreen();
   Brain.Screen.clearLine();
   Brain.Screen.print(heading_error_radians * (180 / M_PI));
 

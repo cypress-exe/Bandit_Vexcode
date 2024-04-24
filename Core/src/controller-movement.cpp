@@ -12,6 +12,7 @@ void ControllerMovement::initDriveMotors(){
   Controller1.Axis4.changed(updateDriveMotors);
   Controller1.Axis1.changed(updateDriveMotors);
   Controller1.Axis2.changed(updateDriveMotors);
+  InertialSensor.changed(updateDriveMotors);
 }
 
 void ControllerMovement::initArmMotors(){
@@ -67,7 +68,7 @@ void ControllerMovement::updateDriveMotors(){
   float strafe_motor_velocity = 0;
 
   // Get robot heading from Inertia Sensor
-  float robot_heading_degrees = InertialSensor.heading(degrees);
+  double robot_heading_degrees = InertialSensor.heading(degrees);
 
   // Convert to radians
   double robot_heading_radians = robot_heading_degrees * (M_PI / 180);
@@ -92,40 +93,25 @@ void ControllerMovement::updateDriveMotors(){
   double target_heading_radians = atan2(target_x_radians, target_y_radians); // x and y are flipped, but it magicaly works...
 
   // Calculate the corrections strength. Proportional to how far off the origin the joystick is.
-  float correction_strength = 1 - std::abs(2 * (std::sqrt(turning_x_axis_value) + std::sqrt(turning_y_axis_value)));
+  float correction_strength = std::abs(turning_x_axis_value) + std::abs(turning_y_axis_value);
 
   // Deadband for correction strength
-  correction_strength = (correction_strength > turning_deadband ? correction_strength : 0);
+  correction_strength = (correction_strength > turning_deadband ? 1 : 0);
 
   // Calculate heading error
-  // float heading_error_radians = target_heading_radians - robot_heading_radians;
-  // if (std::abs(heading_error_radians) > M_PI){
-  //   if (heading_error_radians > 0) heading_error_radians = heading_error_radians - M_PI;
-  //   else heading_error_radians = M_PI + heading_error_radians;
-  // }
   float heading_error_radians = target_heading_radians - robot_heading_radians;
   if (heading_error_radians > M_PI) heading_error_radians -= M_TWOPI;
   if (heading_error_radians < -M_PI) heading_error_radians += M_TWOPI;
-  //heading_error_radians += (heading_error_radians > M_PI) ? M_TWOPI : (heading_error_radians < -M_PI) ? M_TWOPI : 0;
-
-  Brain.Screen.clearScreen();
-  Brain.Screen.clearLine();
-  Brain.Screen.print(heading_error_radians * (180 / M_PI));
 
   // Determine if heading error is big enough to act
   if (std::abs(heading_error_radians) > robot_heading_correction_deadband_radians)
   {
-    Brain.Screen.printAt(0, 1, "Running");
     // Multiply error by speed in settings
     float turning_value = turning_speed_multiplier * heading_error_radians * correction_strength; 
 
-    // left_motor_velocity += turning_value;
-    // right_motor_velocity -= turning_value;
+    left_motor_velocity += turning_value;
+    right_motor_velocity -= turning_value;
   }
-
-  // left_motor_velocity = 0;
-  // right_motor_velocity = 0;
-  // strafe_motor_velocity = 0;
 
   // Update the motors to be the computed velocity
   LeftDriveMotor.setVelocity(left_motor_velocity, percent);
